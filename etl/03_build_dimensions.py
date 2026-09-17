@@ -113,6 +113,12 @@ VENUE_NAME_ALIASES = {
 # venue AND the city together. Narrow rules for narrow problems.
 VENUE_CITY_OVERRIDES = {
     ("Maple Leaf North-West Ground", "Toronto"): "King City",
+
+    # A wider region, or another venue's name, recorded as the city -
+    # the same shape of error as "Sabina Park, Jamaica".
+    ("Windsor Park", "Dominica"): "Roseau",
+    ("Niaz Stadium", "Sind"): "Hyderabad",
+    ("Chilaw Marians Cricket Club Ground", "FTZ Sports Complex"): "Katunayake",
 }
 
 # Same ground recorded under two names.
@@ -145,6 +151,15 @@ VENUE_MERGES = {
     "North West Cricket Stadium": "Senwes Park",
     "Westpac Park": "Seddon Park",
     "Queen's Park (New)": "Queen's Park",
+    "Saurashtra Cricket Association Stadium": "Niranjan Shah Stadium",
+
+    # --- inconsistent spelling across years, not a rename ---
+    # W.A.C.A. appears 2004-05 and again 2019; the full name covers
+    # 2006-2024. Interleaved, never on the same day: one ground.
+    "W.A.C.A. Ground": "Western Australia Cricket Association Ground",
+    # John Davies Oval is the cricket oval AT the Queenstown Events
+    # Centre. Cricsheet alternates between the two names.
+    "Queenstown Events Centre": "John Davies Oval",
 
     # Renamed in 2016 for St Lucia's World Cup-winning captain. Zero string
     # similarity to its old name - only domain knowledge finds this one.
@@ -283,6 +298,19 @@ def build_venue(matches: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     dim["capacity"] = pd.Series(idx.map(cap_lookup["capacity"]), index=dim.index)
     dim["capacity_source"] = pd.Series(idx.map(cap_lookup["capacity_source"]),
                                        index=dim.index)
+
+    # Fallback on the name alone, where that name is unique in the
+    # snapshot. The snapshot was frozen with the cities we had AT THE
+    # TIME, so a later city correction (Windsor Park: "Dominica" ->
+    # "Roseau") would otherwise break the match silently. Never key a
+    # reference file on a field the pipeline is still cleaning.
+    uniq = cap["venue_name"].value_counts().loc[lambda s: s == 1].index
+    by_name = cap[cap["venue_name"].isin(uniq)].set_index("venue_name")
+    gap0 = dim["capacity"].isna()
+    dim.loc[gap0, "capacity"] = dim.loc[gap0, "venue_clean"].map(
+        by_name["capacity"])
+    dim.loc[gap0, "capacity_source"] = dim.loc[gap0, "venue_clean"].map(
+        by_name["capacity_source"])
 
     absurd = dim["capacity"] > MAX_PLAUSIBLE_CAPACITY
     if absurd.any():
