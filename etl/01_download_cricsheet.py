@@ -15,6 +15,11 @@ RAW_DIR = PROJECT_ROOT / "data" / "raw"
 
 BUNDLES = {
     "odis_json.zip": "https://cricsheet.org/downloads/odis_json.zip",
+
+    # The player register: full names plus cross-reference ids for 12 other
+    # sites, including key_cricbuzz. Saves a name-search request per player.
+    "people.csv": "https://cricsheet.org/register/people.csv",
+
     # Uncomment once the ODI pipeline works end to end:
     # "tests_json.zip": "https://cricsheet.org/downloads/tests_json.zip",
     # "t20s_json.zip": "https://cricsheet.org/downloads/t20s_json.zip",

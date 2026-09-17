@@ -1,0 +1,383 @@
+venue,matches_played,city,likely_country,country,how,confidence
+Queen's Park Oval,22,,West Indies,Trinidad and Tobago,REVIEW,LOW
+Hazelaarweg,8,,Netherlands,The Netherlands,REVIEW,LOW
+P Sara Oval,8,Colombo,India,Sri Lanka,REVIEW,LOW
+John Davies Oval,6,,New Zealand,New Zealand,REVIEW,LOW
+Sabina Park,5,Kingston,West Indies,Jamaica,REVIEW,LOW
+County Ground,4,,Bangladesh,England,REVIEW,LOW
+Rajiv Gandhi International Stadium,4,Hyderabad,New Zealand,India,REVIEW,LOW
+Castle Avenue,3,Dublin,Bangladesh,Ireland,REVIEW,LOW
+The Cooper Associates County Ground,2,Taunton,Australia,England,REVIEW,LOW
+Hurstville Oval,2,Sydney,West Indies,Australia,REVIEW,LOW
+Observatory Lane,1,Dublin,Pakistan,Ireland,REVIEW,LOW
+County Ground,1,,India,England,REVIEW,LOW
+Western Australia Cricket Association Ground,1,,India,Australia,REVIEW,LOW
+Clontarf Cricket Club Ground,1,,Sri Lanka,Ireland,REVIEW,LOW
+Carisbrook,1,Dunedin,South Africa,New Zealand,REVIEW,LOW
+YMCA Cricket Club,1,Dublin,Pakistan,Ireland,REVIEW,LOW
+Lal Bahadur Shastri Stadium,1,Hyderabad,New Zealand,India,REVIEW,LOW
+Davies Park,1,,New Zealand,New Zealand,REVIEW,LOW
+Junction Oval,1,Melbourne,New Zealand,Australia,REVIEW,LOW
+John Davies Oval,1,Queenstown,Sri Lanka,New Zealand,REVIEW,LOW
+The Hills Cricket Club Ground,1,Dublin,South Africa,Ireland,REVIEW,LOW
+Westpac Park,1,,India,New Zealand,REVIEW,LOW
+The Royal & Sun Alliance County Ground,1,,Zimbabwe,England,REVIEW,LOW
+The Vineyard,1,Dublin,New Zealand,Ireland,REVIEW,LOW
+Harare Sports Club,127,Harare,Zimbabwe,Zimbabwe,agree,high
+Rangiri Dambulla International Stadium,51,Dambulla,Sri Lanka,Sri Lanka,agree,high
+R Premadasa Stadium,49,Colombo,Sri Lanka,Sri Lanka,agree,high
+Sydney Cricket Ground,49,Sydney,Australia,Australia,agree,high
+R Premadasa Stadium,45,,Sri Lanka,Sri Lanka,agree,high
+Kennington Oval,42,London,England,England,uk,high
+Pallekele International Cricket Stadium,42,Kandy,Sri Lanka,Sri Lanka,agree,high
+Shere Bangla National Stadium,42,Dhaka,Bangladesh,Bangladesh,agree,high
+County Ground,41,Bristol,England,England,uk,high
+Melbourne Cricket Ground,40,Melbourne,Australia,Australia,agree,high
+Queens Sports Club,37,Bulawayo,Zimbabwe,Zimbabwe,agree,high
+Adelaide Oval,34,Adelaide,Australia,Australia,agree,high
+Lord's,34,London,England,England,uk,high
+SuperSport Park,34,Centurion,South Africa,South Africa,agree,high
+Edgbaston,31,Birmingham,England,England,uk,high
+Gaddafi Stadium,28,,Pakistan,Pakistan,agree,high
+The Rose Bowl,27,Southampton,England,England,uk,high
+Kingsmead,26,Durban,South Africa,South Africa,agree,high
+Eden Park,26,Auckland,New Zealand,New Zealand,agree,high
+Brisbane Cricket Ground,26,Brisbane,Australia,Australia,agree,high
+Seddon Park,24,Hamilton,New Zealand,New Zealand,agree,high
+Trent Bridge,23,Nottingham,England,England,uk,high
+Western Australia Cricket Association Ground,23,Perth,Australia,Australia,agree,high
+National Stadium,23,,Pakistan,Pakistan,agree,high
+Mahinda Rajapaksa International Cricket Stadium,23,Hambantota,Sri Lanka,Sri Lanka,agree,high
+Queens Sports Club,22,,Zimbabwe,Zimbabwe,agree,high
+Sophia Gardens,22,Cardiff,England,England,uk,high
+Senwes Park,21,Potchefstroom,South Africa,South Africa,agree,high
+Old Trafford,20,Manchester,England,England,uk,high
+National Stadium,20,Karachi,Pakistan,Pakistan,agree,high
+Westpac Stadium,20,Wellington,New Zealand,New Zealand,agree,high
+Wanderers Cricket Ground,20,,Namibia,Namibia,agree,high
+Bellerive Oval,19,Hobart,Australia,Australia,agree,high
+New Wanderers Stadium,19,Johannesburg,South Africa,South Africa,agree,high
+Newlands,19,Cape Town,South Africa,South Africa,agree,high
+Gaddafi Stadium,18,Lahore,Pakistan,Pakistan,agree,high
+Rawalpindi Cricket Stadium,18,Rawalpindi,Pakistan,Pakistan,agree,high
+Seddon Park,18,,New Zealand,New Zealand,agree,high
+McLean Park,18,Napier,New Zealand,New Zealand,agree,high
+Hagley Oval,17,Christchurch,New Zealand,New Zealand,agree,high
+United Cricket Club Ground,16,,Namibia,Namibia,agree,high
+Forthill,16,,Scotland,Scotland,uk,high
+Headingley,16,Leeds,England,England,uk,high
+Civil Service Cricket Club,15,Belfast,Ireland,Ireland,uk,high
+ICC Academy,15,Dubai,United Arab Emirates,United Arab Emirates,agree,high
+Basin Reserve,14,,New Zealand,New Zealand,agree,high
+MA Chidambaram Stadium,14,Chennai,India,India,agree,high
+Punjab Cricket Association Stadium,14,,India,India,agree,high
+Riverside Ground,14,Chester-le-Street,England,England,uk,high
+Amini Park,13,,Papua New Guinea,Papua New Guinea,agree,high
+Willowmoore Park,13,Benoni,South Africa,South Africa,agree,high
+Wankhede Stadium,12,Mumbai,India,India,agree,high
+Gymkhana Club Ground,12,Nairobi,Kenya,Kenya,agree,high
+Sinhalese Sports Club Ground,12,Colombo,Sri Lanka,Sri Lanka,agree,high
+SuperSport Park,12,,South Africa,South Africa,agree,high
+Saxton Oval,12,Nelson,New Zealand,New Zealand,agree,high
+Clontarf Cricket Club Ground,12,Dublin,Ireland,Ireland,agree,high
+Vidarbha Cricket Association Stadium,11,Nagpur,India,India,agree,high
+University Oval,11,Dunedin,New Zealand,New Zealand,agree,high
+The Village,11,,Ireland,Ireland,agree,high
+Sardar Patel Stadium,11,Ahmedabad,India,India,agree,high
+Civil Service Cricket Club,11,Belfast,Ireland,Ireland,uk,high
+Narendra Modi Stadium,11,,India,India,agree,high
+Multan Cricket Stadium,11,Multan,Pakistan,Pakistan,agree,high
+Lord's,11,,England,England,uk,high
+Feroz Shah Kotla,11,New Delhi,India,India,agree,high
+The Wanderers Stadium,10,,South Africa,South Africa,agree,high
+Sawai Mansingh Stadium,10,Jaipur,India,India,agree,high
+Eden Gardens,10,Kolkata,India,India,agree,high
+ICC Academy,10,,United Arab Emirates,United Arab Emirates,agree,high
+Hagley Oval,10,,New Zealand,New Zealand,agree,high
+Wankhede Stadium,9,,India,India,agree,high
+Manuka Oval,9,Canberra,Australia,Australia,agree,high
+Reliance Stadium,9,Vadodara,India,India,agree,high
+Boland Park,9,Paarl,South Africa,South Africa,agree,high
+Buffalo Park,8,East London,South Africa,South Africa,agree,high
+Mannofield Park,8,Aberdeen,Scotland,Scotland,uk,high
+Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium,8,Visakhapatnam,India,India,agree,high
+R.Premadasa Stadium,8,Colombo,Sri Lanka,Sri Lanka,agree,high
+Nehru Stadium,8,Pune,India,India,agree,high
+Castle Avenue,8,,Ireland,Ireland,agree,high
+M Chinnaswamy Stadium,8,,India,India,agree,high
+Kingsmead,8,,South Africa,South Africa,agree,high
+County Ground,8,,England,England,uk,high
+The Wanderers Stadium,7,Johannesburg,South Africa,South Africa,agree,high
+Allan Border Field,7,Brisbane,Australia,Australia,agree,high
+Bert Sutcliffe Oval,7,Lincoln,New Zealand,New Zealand,agree,high
+Buffalo Park,7,,South Africa,South Africa,agree,high
+Grange Cricket Club Ground,7,Edinburgh,Scotland,Scotland,uk,high
+Newlands,7,,South Africa,South Africa,agree,high
+Riverside Ground,7,,England,England,uk,high
+University Oval,7,,New Zealand,New Zealand,agree,high
+Galle International Stadium,7,Galle,Sri Lanka,Sri Lanka,agree,high
+Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium,7,,India,India,agree,high
+Maharashtra Cricket Association Stadium,7,Pune,India,India,agree,high
+Sylhet International Cricket Stadium,7,Sylhet,Bangladesh,Bangladesh,agree,high
+Mahinda Rajapaksa International Cricket Stadium,6,Hambantota,Sri Lanka,Sri Lanka,agree,high
+Allan Border Field,6,,Australia,Australia,agree,high
+Diamond Oval,6,Kimberley,South Africa,South Africa,agree,high
+Rajiv Gandhi International Stadium,6,Hyderabad,India,India,agree,high
+McLean Park,6,,New Zealand,New Zealand,agree,high
+Namibia Cricket Ground,6,,Namibia,Namibia,agree,high
+Barabati Stadium,6,Cuttack,India,India,agree,high
+Kennington Oval,6,,England,England,uk,high
+Green Park,6,Kanpur,India,India,agree,high
+The Village,6,Malahide,Ireland,Ireland,agree,high
+Zahur Ahmed Chowdhury Stadium,5,,Bangladesh,Bangladesh,agree,high
+Basin Reserve,5,Wellington,New Zealand,New Zealand,agree,high
+Mangaung Oval,5,,South Africa,South Africa,agree,high
+Senwes Park,5,,South Africa,South Africa,agree,high
+Mannofield Park,5,,Scotland,Scotland,uk,high
+Dr DY Patil Sports Academy,5,,India,India,agree,high
+Docklands Stadium,5,Melbourne,Australia,Australia,agree,high
+MA Chidambaram Stadium,5,Chennai,India,India,agree,high
+Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium,5,,India,India,agree,high
+Grace Road,5,,England,England,uk,high
+Nondescripts Cricket Club Ground,5,Colombo,Sri Lanka,Sri Lanka,agree,high
+R.Premadasa Stadium,5,Colombo,Sri Lanka,Sri Lanka,agree,high
+JSCA International Stadium Complex,5,Ranchi,India,India,agree,high
+Junction Oval,5,,Australia,Australia,agree,high
+Eden Park,5,,New Zealand,New Zealand,agree,high
+The Rose Bowl,5,,England,England,uk,high
+Sophia Gardens,5,,England,England,uk,high
+Mangaung Oval,5,Bloemfontein,South Africa,South Africa,agree,high
+Willowmoore Park,4,,South Africa,South Africa,agree,high
+Old Trafford,4,,England,England,uk,high
+W.A.C.A. Ground,4,Perth,Australia,Australia,agree,high
+AMI Stadium,4,Christchurch,New Zealand,New Zealand,agree,high
+Bellerive Oval,4,,Australia,Australia,agree,high
+North Sydney Oval,4,,Australia,Australia,agree,high
+Perth Stadium,4,Perth,Australia,Australia,agree,high
+County Ground,4,,England,England,uk,high
+Trent Bridge,4,,England,England,uk,high
+Cazaly's Stadium,4,,Australia,Australia,agree,high
+County Ground,4,,England,England,uk,high
+County Ground,4,,England,England,uk,high
+Shaheed Chandu Stadium,4,Bogra,Bangladesh,Bangladesh,agree,high
+Iqbal Stadium,4,,Pakistan,Pakistan,agree,high
+Kotambi Stadium,4,,India,India,agree,high
+Malahide,4,Malahide,Ireland,Ireland,agree,high
+Headingley,4,,England,England,uk,high
+The Cooper Associates County Ground,4,,England,England,uk,high
+Boland Park,4,,South Africa,South Africa,agree,high
+Iqbal Stadium,4,Faisalabad,Pakistan,Pakistan,agree,high
+Arbab Niaz Stadium,3,Peshawar,Pakistan,Pakistan,agree,high
+Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium,3,Lucknow,India,India,agree,high
+MA Aziz Stadium,3,Chattogram,Bangladesh,Bangladesh,agree,high
+Diamond Oval,3,,South Africa,South Africa,agree,high
+Shahid Kamruzzaman Stadium,3,,Bangladesh,Bangladesh,agree,high
+Terdthai Cricket Ground,3,,Thailand,Thailand,agree,high
+Holkar Cricket Stadium,3,Indore,India,India,agree,high
+Edgbaston,3,,England,England,uk,high
+St Lawrence Ground,3,,England,England,uk,high
+St Lawrence Ground,3,Canterbury,England,England,uk,high
+Jade Stadium,3,Christchurch,New Zealand,New Zealand,agree,high
+Southend Club Cricket Stadium,3,,Pakistan,Pakistan,agree,high
+North Sydney Oval,3,Sydney,Australia,Australia,agree,high
+Ray Mitchell Oval,3,Mackay,Australia,Australia,agree,high
+Mission Road Ground,3,,Hong Kong,Hong Kong,agree,high
+Marrara Cricket Ground,3,Darwin,Australia,Australia,agree,high
+Saxton Oval,3,,New Zealand,New Zealand,agree,high
+Punjab Cricket Association IS Bindra Stadium,3,,India,India,agree,high
+Titwood,3,,Scotland,Scotland,uk,high
+Bangabandhu National Stadium,3,,Bangladesh,Bangladesh,agree,high
+Arun Jaitley Stadium,2,Delhi,India,India,agree,high
+Barabati Stadium,2,,India,India,agree,high
+Bangabandhu National Stadium,2,Dhaka,Bangladesh,Bangladesh,agree,high
+Tony Ireland Stadium,2,,Australia,Australia,agree,high
+St George's Park,2,,South Africa,South Africa,agree,high
+County Ground,2,,England,England,uk,high
+North West Cricket Stadium,2,,South Africa,South Africa,agree,high
+OUTsurance Oval,2,Bloemfontein,South Africa,South Africa,agree,high
+Manuka Oval,2,,Australia,Australia,agree,high
+Sardar Patel (Gujarat) Stadium,2,Ahmedabad,India,India,agree,high
+Captain Roop Singh Stadium,2,Gwalior,India,India,agree,high
+Cobham Oval (New),2,Whangarei,New Zealand,New Zealand,agree,high
+North Marine Road Ground,2,Scarborough,England,England,uk,high
+Chevrolet Park,2,Bloemfontein,South Africa,South Africa,agree,high
+City Oval,2,,South Africa,South Africa,agree,high
+Sinhalese Sports Club,2,Colombo,Sri Lanka,Sri Lanka,agree,high
+Sheikh Abu Naser Stadium,2,Khulna,Bangladesh,Bangladesh,agree,high
+Shaheed Veer Narayan Singh International Stadium,2,,India,India,agree,high
+De Beers Diamond Oval,2,Kimberley,South Africa,South Africa,agree,high
+JSCA International Stadium Complex,2,,India,India,agree,high
+Bundaberg Rum Stadium,2,,Australia,Australia,agree,high
+Bharat Ratna Shri Atal Bihari Vajpai Ekana Cricket Stadium,2,Lucknow,India,India,agree,high
+International Sports Stadium,2,Coffs Harbour,Australia,Australia,agree,high
+Eden Park Outer Oval,2,Auckland,New Zealand,New Zealand,agree,high
+Great Barrier Reef Arena,2,,Australia,Australia,agree,high
+P Saravanamuttu Stadium,1,Colombo,Sri Lanka,Sri Lanka,agree,high
+P Sara Oval,1,,Sri Lanka,Sri Lanka,agree,high
+Vidarbha Cricket Association Stadium,1,Nagpur,India,India,agree,high
+Vidarbha Cricket Association Ground,1,Nagpur,India,India,agree,high
+Sector 16 Stadium,1,Chandigarh,India,India,agree,high
+Sedgars Park,1,,South Africa,South Africa,agree,high
+Nahar Singh Stadium,1,Faridabad,India,India,agree,high
+Captain Roop Singh Stadium,1,,India,India,agree,high
+New Williamfield No1 Oval,1,,Scotland,Scotland,uk,high
+Westpac Stadium,1,,New Zealand,New Zealand,agree,high
+Punjab Cricket Association IS Bindra Stadium,1,Mohali,India,India,agree,high
+Eden Park No 2,1,Auckland,New Zealand,New Zealand,agree,high
+Sinhalese Sports Club Ground,1,,Sri Lanka,Sri Lanka,agree,high
+Keenan Stadium,1,Jamshedpur,India,India,agree,high
+Jaffery Sports Club Ground,1,Nairobi,Kenya,Kenya,agree,high
+Jade Stadium,1,,New Zealand,New Zealand,agree,high
+Sky Stadium,1,,New Zealand,New Zealand,agree,high
+Cambusdoon New Ground,1,Ayr,Scotland,Scotland,uk,high
+Sunrise Sports Club,1,,Zimbabwe,Zimbabwe,agree,high
+Khettarama Stadium,1,Colombo,Sri Lanka,Sri Lanka,agree,high
+Harlequins,1,Durban,South Africa,South Africa,agree,high
+Grange Cricket Club Ground,1,Edinburgh,Scotland,Scotland,uk,high
+Arnos Vale Ground,1,Kingstown,West Indies,Saint Vincent and the Grenadines,geo-only,medium
+Vidarbha C.A. Ground,1,Nagpur,Sri Lanka,India,geo-only,medium
+Daren Sammy National Cricket Stadium,1,,West Indies,Saint Lucia,geo-miss,medium
+Darren Sammy National Cricket Stadium,1,Gros Islet,England,Saint Lucia,geo-only,medium
+Daren Sammy National Cricket Stadium,1,Gros Islet,West Indies,Saint Lucia,geo-only,medium
+Queen's Park Oval,1,Port of Spain,West Indies,Trinidad and Tobago,geo-only,medium
+Nehru Stadium,1,Pune,New Zealand,India,geo-only,medium
+Old Hararians,1,,Pakistan,Zimbabwe,geo-only,medium
+Toronto Cricket,1,Toronto,Ireland,Canada,geo-only,medium
+Wanderers Cricket Ground,1,Windhoek,Oman,Namibia,geo-only,medium
+MA Aziz Stadium,1,Chattogram,England,Bangladesh,geo-only,medium
+Louth Cricket Club,1,Louth,Pakistan,Ireland,geo-miss,medium
+National Cricket Stadium,1,St George's,West Indies,Grenada,geo-miss,medium
+Nahar Singh Stadium,1,,New Zealand,India,geo-only,medium
+Chilaw Marians Cricket Club Ground,1,Chilaw,Sri Lanka,Sri Lanka,geo-miss,medium
+Ruaraka Sports Club Ground,1,Nairobi,Bermuda,Kenya,geo-only,medium
+Riverway Stadium,1,,Zimbabwe,Australia,geo-only,medium
+Niranjan Shah Stadium,1,,New Zealand,India,geo-miss,medium
+Marrara Cricket Ground,1,,Bangladesh,Australia,geo-only,medium
+Mulpani Cricket Ground,1,Kathmandu,United Arab Emirates,Nepal,geo-only,medium
+Niaz Stadium,1,,Zimbabwe,Pakistan,geo-miss,medium
+YSD-UKM Cricket Oval,1,,United Arab Emirates,Malaysia,geo-only,medium
+Affies Park,1,Windhoek,Papua New Guinea,Namibia,geo-only,medium
+Titwood,1,Glasgow,India,Scotland,geo-only,medium
+Sir Paul Getty's Ground,1,Wormsley,India,England,geo-miss,medium
+Sinovich Park,1,Pretoria,Pakistan,South Africa,geo-only,medium
+Sheikhupura Stadium,1,Sheikhupura,Zimbabwe,Pakistan,geo-miss,medium
+Sher-e-Bangla National Cricket Stadium,1,Dhaka,Sri Lanka,Bangladesh,geo-miss,medium
+Karen Rolton Oval,1,Adelaide,New Zealand,Australia,geo-only,medium
+Southend Club Cricket Stadium,1,Karachi,Bangladesh,Pakistan,geo-only,medium
+Bready Cricket Club,1,,Zimbabwe,Ireland,geo-miss,medium
+Brisbane Cricket Ground,1,Brisbane,Sri Lanka,Australia,geo-only,medium
+Greenfield International Stadium,1,,Sri Lanka,India,geo-only,medium
+Stellenbosch University 2,1,Stellenbosch,Pakistan,South Africa,geo-miss,medium
+Indian Petrochemicals Corporation Limited Sports Complex Ground,1,Vadodara,West Indies,India,geo-only,medium
+Haslegrave Ground,1,Loughborough,Pakistan,England,geo-only,medium
+Gymkhana Club Ground,1,,Sri Lanka,Kenya,geo-only,medium
+Goodyear Park,1,Bloemfontein,Zimbabwe,South Africa,geo-only,medium
+FTZ Sports Complex (BOI),1,Katunayake,Sri Lanka,Sri Lanka,geo-miss,medium
+Greenfield International Stadium,1,Thiruvananthapuram,West Indies,India,geo-only,medium
+Grange Cricket Club,1,Edinburgh,Sri Lanka,Scotland,geo-only,medium
+Bir Sreshtho Flight Lieutenant Matiur Rahman Stadium,1,,New Zealand,Bangladesh,geo-only,medium
+Barsapara Cricket Stadium,1,Guwahati,West Indies,India,geo-only,medium
+Boland Bank Park,1,Paarl,West Indies,South Africa,geo-only,medium
+Andhra Cricket Association-Visakhapatnam District Cricket Association Stadium,1,Visakhapatnam,Sri Lanka,India,geo-only,medium
+Welagedara Stadium,2,Kurunegala,India,Sri Lanka,geo-only,medium
+Sportpark Het Schootsveld,2,Deventer,Netherlands,The Netherlands,geo-only,medium
+VRA Ground,2,Amstelveen,Ireland,The Netherlands,geo-only,medium
+VRA Cricket Ground,2,Amstelveen,India,The Netherlands,geo-only,medium
+Queen's Park Oval,2,Port of Spain,West Indies,Trinidad and Tobago,geo-only,medium
+Queen's Park (New),2,St George's,Australia,Grenada,geo-miss,medium
+Peter Burge Oval,2,Brisbane,Pakistan,Australia,geo-only,medium
+Nehru Stadium,2,,India,India,geo-miss,medium
+Narayanganj Osmani Stadium,2,Narayanganj,Australia,Bangladesh,geo-miss,medium
+Choice Moosa Stadium,2,,Scotland,United States,geo-only,medium
+National Cricket Stadium,2,St George's,West Indies,Grenada,geo-miss,medium
+M.Chinnaswamy Stadium,2,Bengaluru,Australia,India,geo-only,medium
+Maharaja Yadavindra Singh International Cricket Stadium,2,,Australia,India,geo-miss,medium
+Sedgars Park,2,Potchefstroom,Zimbabwe,South Africa,geo-only,medium
+Mombasa Sports Club Ground,2,Mombasa,Ireland,Kenya,geo-miss,medium
+De Beers Diamond Oval,2,,Pakistan,South Africa,geo-only,medium
+Dubai Sports City Cricket Stadium,2,Dubai,Australia,United Arab Emirates,geo-miss,medium
+Sheikh Kamal International Cricket Stadium,2,Cox's Bazar,Bangladesh,Bangladesh,geo-miss,medium
+Maharani Usharaje Trust Cricket Ground,2,Gwalior,England,India,geo-only,medium
+Arnos Vale Ground,2,Kingstown,Bangladesh,Saint Vincent and the Grenadines,geo-only,medium
+Stellenbosch University 1,2,Stellenbosch,South Africa,South Africa,geo-miss,medium
+Bradman Oval,2,Bowral,Australia,Australia,geo-miss,medium
+Brisbane Cricket Ground,2,Brisbane,India,Australia,geo-only,medium
+Cambusdoon New Ground,2,,Namibia,Scotland,geo-only,medium
+Antigua Recreation Ground,2,,Zimbabwe,Antigua and Barbuda,geo-miss,medium
+Three Ws Oval,3,Bridgetown,South Africa,Barbados,geo-miss,medium
+Zohur Ahmed Chowdhury Stadium,3,Chattogram,Bangladesh,Bangladesh,geo-miss,medium
+Zayed Cricket Stadium,3,,Ireland,United Arab Emirates,geo-only,medium
+Boland Bank Park,3,,Netherlands,South Africa,geo-only,medium
+Sir Vivian Richards Stadium,3,North Sound,Sri Lanka,Antigua and Barbuda,geo-miss,medium
+Sir Vivian Richards Stadium,3,North Sound,West Indies,Antigua and Barbuda,geo-miss,medium
+Bready Cricket Club,3,Magheramason,Ireland,Ireland,geo-miss,medium
+Desert Springs Cricket Ground,3,,Ireland,Spain,geo-miss,medium
+ICC Global Cricket Academy,3,Dubai,Ireland,United Arab Emirates,geo-only,medium
+Colombo Cricket Club Ground,3,Colombo,Ireland,Sri Lanka,geo-miss,medium
+Saurashtra Cricket Association Stadium,3,Rajkot,India,India,geo-miss,medium
+Chittagong Divisional Stadium,3,Chattogram,Bangladesh,Bangladesh,geo-miss,medium
+Queen's Park Oval,3,Port of Spain,India,Trinidad and Tobago,geo-only,medium
+North-West University No1 Ground,3,Potchefstroom,India,South Africa,geo-only,medium
+Daren Sammy National Cricket Stadium,3,Gros Islet,West Indies,Saint Lucia,geo-only,medium
+National Cricket Stadium,3,St George's,West Indies,Grenada,geo-miss,medium
+Windsor Park,4,,West Indies,Dominica,geo-miss,medium
+Old Hararians,4,Harare,West Indies,Zimbabwe,geo-only,medium
+Kensington Oval,4,Bridgetown,West Indies,Barbados,geo-only,medium
+Khan Shaheb Osman Ali Stadium,4,Narayanganj,Sri Lanka,Bangladesh,geo-miss,medium
+Sportpark Westvliet,4,,Netherlands,The Netherlands,geo-only,medium
+Himachal Pradesh Cricket Association Stadium,4,Dharamsala,India,India,geo-miss,medium
+Himachal Pradesh Cricket Association Stadium,4,,New Zealand,India,geo-only,medium
+Maple Leaf North-West Ground,4,King City,Canada,Canada,geo-miss,medium
+Saurashtra Cricket Association Stadium,4,,India,India,geo-miss,medium
+Madhavrao Scindia Cricket Ground,4,Rajkot,India,India,geo-miss,medium
+Brian Lara Stadium,4,Tarouba,West Indies,Trinidad and Tobago,geo-miss,medium
+Maharashtra Cricket Association Stadium,4,,Bangladesh,India,geo-only,medium
+Royal Chiangmai Golf Club,4,Chiang Mai,Netherlands,Thailand,geo-only,medium
+Queenstown Events Centre,5,Queenstown,New Zealand,New Zealand,geo-miss,medium
+Al Amerat Cricket Ground Oman Cricket (Ministry Turf 2),5,Al Amerat,Papua New Guinea,Oman,geo-miss,medium
+New Wanderers Stadium,5,,Australia,South Africa,geo-only,medium
+Arun Jaitley Stadium,5,,Sri Lanka,India,geo-only,medium
+Central Broward Regional Park Stadium Turf Ground,5,Lauderhill,Papua New Guinea,United States,geo-only,medium
+St George's Park,5,Gqeberha,Australia,South Africa,geo-only,medium
+Goodyear Park,5,,New Zealand,South Africa,geo-only,medium
+Barsapara Cricket Stadium,6,,England,India,geo-only,medium
+Eden Gardens,6,,Bangladesh,India,geo-only,medium
+Bulawayo Athletic Club,6,Bulawayo,Oman,Zimbabwe,geo-only,medium
+Central Broward Regional Park Stadium Turf Ground,6,,Oman,United States,geo-only,medium
+Tribhuvan University International Cricket Ground,6,Kirtipur,Nepal,Nepal,geo-miss,medium
+Grand Prairie Stadium,7,Grand Prairie,United States of America,United States,geo-only,medium
+Providence Stadium,7,Georgetown,West Indies,Guyana,geo-only,medium
+Coolidge Cricket Ground,7,,West Indies,Antigua and Barbuda,geo-miss,medium
+Lahore City Cricket Association Ground,7,Lahore,Scotland,Pakistan,geo-only,medium
+Sharjah Cricket Association Stadium,7,Sharjah,Zimbabwe,United Arab Emirates,geo-only,medium
+Holkar Cricket Stadium,8,,Australia,India,geo-only,medium
+Arnos Vale Ground,8,,West Indies,Saint Vincent and the Grenadines,geo-miss,medium
+Warner Park,9,Basseterre,West Indies,Saint Kitts and Nevis,geo-only,medium
+Takashinga Sports Club,9,Harare,United States of America,Zimbabwe,geo-only,medium
+Moosa Cricket Stadium,10,,United States of America,United States,geo-only,medium
+Zahur Ahmed Chowdhury Stadium,12,Chattogram,Bangladesh,Bangladesh,geo-miss,medium
+Bay Oval,12,,New Zealand,New Zealand,geo-miss,medium
+Grace Road,12,Leicester,Pakistan,England,geo-only,medium
+National Cricket Stadium,12,,West Indies,Grenada,geo-miss,medium
+M Chinnaswamy Stadium,12,Bengaluru,India,India,geo-miss,medium
+Kensington Oval,13,Bridgetown,West Indies,Barbados,geo-only,medium
+Sportpark Maarschalkerweerd,14,,Netherlands,The Netherlands,geo-only,medium
+Sir Vivian Richards Stadium,14,North Sound,West Indies,Antigua and Barbuda,geo-miss,medium
+Kinrara Academy Oval,14,Kuala Lumpur,Australia,Malaysia,geo-only,medium
+Maple Leaf North-West Ground,14,,Canada,Canada,geo-miss,medium
+Brabourne Stadium,16,Mumbai,West Indies,India,geo-only,medium
+Bay Oval,16,Mount Maunganui,New Zealand,New Zealand,geo-miss,medium
+Warner Park,18,,West Indies,Saint Kitts and Nevis,geo-miss,medium
+Beausejour Stadium,18,,West Indies,Saint Lucia,geo-miss,medium
+Sir Vivian Richards Stadium,18,,West Indies,Antigua and Barbuda,geo-miss,medium
+VRA Ground,18,,Netherlands,The Netherlands,geo-only,medium
+Kensington Oval,18,,West Indies,Barbados,geo-miss,medium
+Sabina Park,19,,West Indies,Jamaica,geo-only,medium
+St George's Park,20,Gqeberha,South Africa,South Africa,geo-miss,medium
+Providence Stadium,21,Georgetown,West Indies,Guyana,geo-miss,medium
+Al Amerat Cricket Ground Oman Cricket (Ministry Turf 1),28,Al Amerat,Oman,Oman,geo-miss,medium
+Sharjah Cricket Stadium,32,Sharjah,Pakistan,United Arab Emirates,geo-only,medium
+Sheikh Zayed Stadium,37,Abu Dhabi,Pakistan,United Arab Emirates,geo-only,medium
+Tribhuvan University International Cricket Ground,40,,Nepal,Nepal,geo-miss,medium
+Dubai International Cricket Stadium,59,Dubai,Pakistan,United Arab Emirates,geo-only,medium
+Shere Bangla National Stadium,85,Dhaka,Bangladesh,Bangladesh,geo-miss,medium
