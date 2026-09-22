@@ -27,7 +27,7 @@ SOURCES = {
         "name": "Cricbuzz Cricket API (via RapidAPI)",
         "url": "https://rapidapi.com/cricketapilive/api/cricbuzz-cricket",
         "what": "Live, recent and upcoming matches; top-statistics leaderboards",
-        "licence": "Free tier, 700 requests/month",
+        "licence": "Free tier, 200 requests/month",
         "retrieved": "read live, never stored",
     },
     "venue_capacity": {
