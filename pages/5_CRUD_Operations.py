@@ -1,7 +1,7 @@
 """
 Manage Data — create, read, update and delete player records.
 
-    Browse   search and filter the player table (Read)
+    Browse   search and filter the player table, and download it as CSV (Read)
     Add      a form that inserts a new player (Create)
     Edit     pick a player, change their details, save (Update)
     Delete   remove a player - but only if nothing else refers to them
@@ -18,6 +18,11 @@ working instead of hiding them:
     a CHECK constraint in the database);
   * gender must be male or female (a CHECK constraint).
 
+Browsing is open to everyone. Adding, editing and deleting are locked
+behind a password (MANAGE_PASSWORD, kept in .env locally and in the
+Streamlit Cloud secrets online), because the app is public and the
+database is real. If no password is set, editing stays locked.
+
 Players added here get an id starting with "usr_", so they are easy to tell
 apart from the players loaded from Cricsheet.
 
@@ -28,6 +33,8 @@ editable: they are facts calculated from matches, not details to type in.
 
 from __future__ import annotations
 
+import hmac
+import os
 import secrets
 from datetime import date, datetime
 
@@ -88,6 +95,7 @@ def player_options() -> pd.DataFrame:
         ORDER BY (player_id LIKE 'usr\\_%') DESC, player_name
     """)
 
+
 @st.cache_data(ttl=600, show_spinner=False)
 def matching_players(q: str | None, g: str | None, r: str | None,
                      added: bool) -> pd.DataFrame:
@@ -103,6 +111,7 @@ def matching_players(q: str | None, g: str | None, r: str | None,
           AND (NOT :added OR player_id LIKE 'usr\\_%')
         ORDER BY last_match DESC NULLS LAST, player_name
     """, {"q": q, "g": g, "r": r, "added": added})
+
 
 def get_player(player_id: str) -> dict | None:
     df = run_query("SELECT * FROM dim_player WHERE player_id = :p", {"p": player_id})
@@ -141,6 +150,49 @@ def clean(text: str | None) -> str | None:
     return text or None
 
 
+def password_ok(typed: str) -> bool:
+    """Compare in constant time, so the check leaks nothing about the answer."""
+    expected = os.getenv("MANAGE_PASSWORD") or ""
+    return bool(expected) and hmac.compare_digest(typed.encode(), expected.encode())
+
+
+def _unlock() -> None:
+    if password_ok(st.session_state.get("crud_pw", "")):
+        st.session_state["crud_unlocked"] = True
+        st.session_state["crud_pw_bad"] = False
+    else:
+        st.session_state["crud_pw_bad"] = True
+    st.session_state["crud_pw"] = ""                 # never keep the typed password
+
+
+def _lock() -> None:
+    st.session_state["crud_unlocked"] = False
+
+
+def edit_lock() -> bool:
+    """The lock bar. Returns True when this visitor may add, edit and delete."""
+    if not os.getenv("MANAGE_PASSWORD"):
+        st.info("Editing is switched off: no MANAGE_PASSWORD is set for this app. "
+                "Browsing and downloading still work.", icon=":material/lock:")
+        return False
+    if st.session_state.get("crud_unlocked"):
+        left, right = st.columns([4, 1])
+        left.success("Editing unlocked for this session.", icon=":material/lock_open:")
+        right.button("Lock again", key="crud_lock", on_click=_lock, width="stretch")
+        return True
+    with st.container(border=True):
+        st.markdown(":material/lock: **Editing is locked.** Anyone can browse and download; "
+                    "adding, editing and deleting need the project password.")
+        left, right = st.columns([3, 1], vertical_alignment="bottom")
+        left.text_input("Password", type="password", key="crud_pw",
+                        placeholder="Project password")
+        right.button("Unlock", key="crud_unlock", on_click=_unlock, type="primary",
+                     width="stretch")
+        if st.session_state.get("crud_pw_bad"):
+            st.error("That password is not right.")
+    return False
+
+
 # --------------------------------------------------------------------------
 # page
 # --------------------------------------------------------------------------
@@ -169,6 +221,9 @@ st.caption("The sidebar filters do not apply on this page. Changes here are real
 if "crud_flash" in st.session_state:
     kind, message = st.session_state.pop("crud_flash")
     getattr(st, kind)(message)
+
+can_edit = edit_lock()
+LOCKED_NOTE = "Unlock editing above to use this tab. Browsing and downloading need no password."
 
 browse_tab, add_tab, edit_tab, delete_tab = st.tabs(
     ["Browse", "Add a player", "Edit a player", "Delete a player"])
@@ -202,160 +257,169 @@ with browse_tab:
                        data=everything.to_csv(index=False).encode("utf-8"),
                        file_name=f"players_{date.today():%Y%m%d}.csv", mime="text/csv",
                        key="crud_download", disabled=everything.empty)
-    
+
 # ---- CREATE ----------------------------------------------------------------
 with add_tab:
-    st.caption("Fields marked * are required. The new player gets an id starting "
-               f"“{NEW_ID_PREFIX}”.")
-    gender = st.segmented_control("Cricket *", list(GENDERS), format_func=GENDERS.get,
-                                  default="male", key="crud_add_gender") or "male"
-    with st.form("crud_add", clear_on_submit=True):
-        left, right = st.columns(2)
-        with left:
-            new_name = st.text_input("Name *", placeholder="e.g. A Sharma")
-            new_team = st.selectbox("Team", team_names(gender), index=None,
-                                    placeholder="Choose a team")
-            new_role = st.selectbox("Role *", ROLES, index=0)
-            new_debut = st.date_input("Debut", value=None, max_value=date.today(),
-                                      min_value=date(1970, 1, 1))
-        with right:
-            new_bat = st.selectbox("Batting style", BATTING_STYLES, index=None,
-                                   placeholder="Not known")
-            new_bowl = st.text_input("Bowling style", placeholder="e.g. Right-arm offbreak")
-            st.write("")
-            new_last = st.date_input("Last match", value=None, max_value=date.today(),
-                                     min_value=date(1970, 1, 1))
-        submitted = st.form_submit_button("Add player", type="primary")
+    if not can_edit:
+        st.info(LOCKED_NOTE)
+    else:
+        st.caption("Fields marked * are required. The new player gets an id starting "
+                   f"“{NEW_ID_PREFIX}”.")
+        gender = st.segmented_control("Cricket *", list(GENDERS), format_func=GENDERS.get,
+                                      default="male", key="crud_add_gender") or "male"
+        with st.form("crud_add", clear_on_submit=True):
+            left, right = st.columns(2)
+            with left:
+                new_name = st.text_input("Name *", placeholder="e.g. A Sharma")
+                new_team = st.selectbox("Team", team_names(gender), index=None,
+                                        placeholder="Choose a team")
+                new_role = st.selectbox("Role *", ROLES, index=0)
+                new_debut = st.date_input("Debut", value=None, max_value=date.today(),
+                                          min_value=date(1970, 1, 1))
+            with right:
+                new_bat = st.selectbox("Batting style", BATTING_STYLES, index=None,
+                                       placeholder="Not known")
+                new_bowl = st.text_input("Bowling style", placeholder="e.g. Right-arm offbreak")
+                st.write("")
+                new_last = st.date_input("Last match", value=None, max_value=date.today(),
+                                         min_value=date(1970, 1, 1))
+            submitted = st.form_submit_button("Add player", type="primary")
 
-    if submitted:
-        if not clean(new_name):
-            st.error("Please enter a name.")
-        elif new_debut and new_last and new_last < new_debut:
-            st.error("The last match cannot be before the debut.")
-        else:
-            new_id = NEW_ID_PREFIX + secrets.token_hex(3)
-            try:
-                execute("""
-                    INSERT INTO dim_player (player_id, player_name, gender, primary_team,
-                                            teams_played_for, playing_role, batting_style,
-                                            bowling_style, debut, last_match)
-                    VALUES (:id, :name, :gender, :team, :teams, :role, :bat, :bowl,
-                            :debut, :last)
-                """, {"id": new_id, "name": clean(new_name), "gender": gender,
-                      "team": new_team, "teams": 1 if new_team else 0, "role": new_role,
-                      "bat": new_bat, "bowl": clean(new_bowl), "debut": new_debut,
-                      "last": new_last})
-            except DatabaseError as exc:
-                st.error(f"Not added — the database refused it and nothing was changed. {exc}")
+        if submitted:
+            if not clean(new_name):
+                st.error("Please enter a name.")
+            elif new_debut and new_last and new_last < new_debut:
+                st.error("The last match cannot be before the debut.")
             else:
-                refresh()
-                log("Added", f"{clean(new_name)} ({new_id})")
-                st.session_state["crud_flash"] = (
-                    "success", f"Added {clean(new_name)} with id {new_id}.")
-                st.rerun()
+                new_id = NEW_ID_PREFIX + secrets.token_hex(3)
+                try:
+                    execute("""
+                        INSERT INTO dim_player (player_id, player_name, gender, primary_team,
+                                                teams_played_for, playing_role, batting_style,
+                                                bowling_style, debut, last_match)
+                        VALUES (:id, :name, :gender, :team, :teams, :role, :bat, :bowl,
+                                :debut, :last)
+                    """, {"id": new_id, "name": clean(new_name), "gender": gender,
+                          "team": new_team, "teams": 1 if new_team else 0, "role": new_role,
+                          "bat": new_bat, "bowl": clean(new_bowl), "debut": new_debut,
+                          "last": new_last})
+                except DatabaseError as exc:
+                    st.error(f"Not added — the database refused it and nothing was changed. {exc}")
+                else:
+                    refresh()
+                    log("Added", f"{clean(new_name)} ({new_id})")
+                    st.session_state["crud_flash"] = (
+                        "success", f"Added {clean(new_name)} with id {new_id}.")
+                    st.rerun()
 
 # ---- UPDATE ----------------------------------------------------------------
 with edit_tab:
-    pid = player_picker("crud_edit_pick", "Player to edit")
-    player = get_player(pid) if pid else None
-    if not player:
-        st.info("Choose a player above. Players added on this page are listed first.")
+    if not can_edit:
+        st.info(LOCKED_NOTE)
     else:
-        g = player["gender"]
-        teams = team_names(g)
-        if player["primary_team"] and player["primary_team"] not in teams:
-            teams = [player["primary_team"], *teams]
-        role = player["playing_role"] if player["playing_role"] in ROLES else "Unknown"
-        # Keys include the player id, so switching player refills the form.
-        with st.form(f"crud_edit_{pid}"):
-            left, right = st.columns(2)
-            with left:
-                e_name = st.text_input("Name *", value=player["player_name"])
-                e_team = st.selectbox("Team", teams,
-                                      index=teams.index(player["primary_team"])
-                                      if player["primary_team"] in teams else None,
-                                      placeholder="No team")
-                e_role = st.selectbox("Role *", ROLES, index=ROLES.index(role))
-                e_debut = st.date_input("Debut", value=player["debut"], min_value=date(1970, 1, 1),
-                                        max_value=date.today())
-            with right:
-                e_bat = st.selectbox("Batting style", BATTING_STYLES,
-                                     index=BATTING_STYLES.index(player["batting_style"])
-                                     if player["batting_style"] in BATTING_STYLES else None,
-                                     placeholder="Not known")
-                e_bowl = st.text_input("Bowling style", value=player["bowling_style"] or "")
-                st.text_input("Cricket", value=GENDERS[g], disabled=True,
-                              help="Men's and women's players are separate records, so "
-                                   "this cannot be changed.")
-                e_last = st.date_input("Last match", value=player["last_match"],
-                                       min_value=date(1970, 1, 1), max_value=date.today())
-            saved = st.form_submit_button("Save changes", type="primary")
+        pid = player_picker("crud_edit_pick", "Player to edit")
+        player = get_player(pid) if pid else None
+        if not player:
+            st.info("Choose a player above. Players added on this page are listed first.")
+        else:
+            g = player["gender"]
+            teams = team_names(g)
+            if player["primary_team"] and player["primary_team"] not in teams:
+                teams = [player["primary_team"], *teams]
+            role = player["playing_role"] if player["playing_role"] in ROLES else "Unknown"
+            # Keys include the player id, so switching player refills the form.
+            with st.form(f"crud_edit_{pid}"):
+                left, right = st.columns(2)
+                with left:
+                    e_name = st.text_input("Name *", value=player["player_name"])
+                    e_team = st.selectbox("Team", teams,
+                                          index=teams.index(player["primary_team"])
+                                          if player["primary_team"] in teams else None,
+                                          placeholder="No team")
+                    e_role = st.selectbox("Role *", ROLES, index=ROLES.index(role))
+                    e_debut = st.date_input("Debut", value=player["debut"], min_value=date(1970, 1, 1),
+                                            max_value=date.today())
+                with right:
+                    e_bat = st.selectbox("Batting style", BATTING_STYLES,
+                                         index=BATTING_STYLES.index(player["batting_style"])
+                                         if player["batting_style"] in BATTING_STYLES else None,
+                                         placeholder="Not known")
+                    e_bowl = st.text_input("Bowling style", value=player["bowling_style"] or "")
+                    st.text_input("Cricket", value=GENDERS[g], disabled=True,
+                                  help="Men's and women's players are separate records, so "
+                                       "this cannot be changed.")
+                    e_last = st.date_input("Last match", value=player["last_match"],
+                                           min_value=date(1970, 1, 1), max_value=date.today())
+                saved = st.form_submit_button("Save changes", type="primary")
 
-        st.caption(f"Id {pid} · calculated from scorecards (not editable): teams played for "
-                   f"{player['teams_played_for'] if player['teams_played_for'] is not None else '—'}"
-                   f" · average batting position "
-                   f"{player['avg_position'] if player['avg_position'] is not None else '—'}"
-                   f" · share of innings bowling "
-                   f"{player['bowl_share'] if player['bowl_share'] is not None else '—'}")
+            st.caption(f"Id {pid} · calculated from scorecards (not editable): teams played for "
+                       f"{player['teams_played_for'] if player['teams_played_for'] is not None else '—'}"
+                       f" · average batting position "
+                       f"{player['avg_position'] if player['avg_position'] is not None else '—'}"
+                       f" · share of innings bowling "
+                       f"{player['bowl_share'] if player['bowl_share'] is not None else '—'}")
 
-        if saved:
-            if not clean(e_name):
-                st.error("The name cannot be empty.")
-            elif e_debut and e_last and e_last < e_debut:
-                st.error("The last match cannot be before the debut.")
-            else:
-                try:
-                    changed = execute("""
-                        UPDATE dim_player
-                        SET player_name = :name, primary_team = :team, playing_role = :role,
-                            batting_style = :bat, bowling_style = :bowl,
-                            debut = :debut, last_match = :last
-                        WHERE player_id = :id
-                    """, {"id": pid, "name": clean(e_name), "team": e_team, "role": e_role,
-                          "bat": e_bat, "bowl": clean(e_bowl), "debut": e_debut,
-                          "last": e_last})
-                except DatabaseError as exc:
-                    st.error(f"Not saved — the database refused it and nothing was changed. {exc}")
+            if saved:
+                if not clean(e_name):
+                    st.error("The name cannot be empty.")
+                elif e_debut and e_last and e_last < e_debut:
+                    st.error("The last match cannot be before the debut.")
                 else:
-                    refresh()
-                    log("Edited", f"{clean(e_name)} ({pid})")
-                    st.session_state["crud_flash"] = (
-                        "success", f"Saved {clean(e_name)} ({changed} row updated).")
-                    st.rerun()
+                    try:
+                        changed = execute("""
+                            UPDATE dim_player
+                            SET player_name = :name, primary_team = :team, playing_role = :role,
+                                batting_style = :bat, bowling_style = :bowl,
+                                debut = :debut, last_match = :last
+                            WHERE player_id = :id
+                        """, {"id": pid, "name": clean(e_name), "team": e_team, "role": e_role,
+                              "bat": e_bat, "bowl": clean(e_bowl), "debut": e_debut,
+                              "last": e_last})
+                    except DatabaseError as exc:
+                        st.error(f"Not saved — the database refused it and nothing was changed. {exc}")
+                    else:
+                        refresh()
+                        log("Edited", f"{clean(e_name)} ({pid})")
+                        st.session_state["crud_flash"] = (
+                            "success", f"Saved {clean(e_name)} ({changed} row updated).")
+                        st.rerun()
 
 # ---- DELETE ----------------------------------------------------------------
 with delete_tab:
-    pid = player_picker("crud_del_pick", "Player to delete")
-    player = get_player(pid) if pid else None
-    if not player:
-        st.info("Choose a player above. Players added on this page are listed first; "
-                "try one of them, then try a well-known player to see the database refuse.")
+    if not can_edit:
+        st.info(LOCKED_NOTE)
     else:
-        refs = reference_counts(pid)
-        if refs:
-            st.warning(
-                f"**{player['player_name']}** appears in the scorecards — "
-                + ", ".join(f"{n:,} {what}" for what, n in refs.items())
-                + ". Deleting them would leave those rows pointing at nobody, so the "
-                  "database's foreign keys will refuse. You can try it: the transaction "
-                  "is rolled back and nothing changes.")
+        pid = player_picker("crud_del_pick", "Player to delete")
+        player = get_player(pid) if pid else None
+        if not player:
+            st.info("Choose a player above. Players added on this page are listed first; "
+                    "try one of them, then try a well-known player to see the database refuse.")
         else:
-            st.success(f"Nothing refers to **{player['player_name']}**, so they can be deleted.")
-
-        sure = st.checkbox(f"Yes, delete {player['player_name']} ({pid})", key=f"crud_sure_{pid}")
-        if st.button("Delete player", type="primary", disabled=not sure, key="crud_delete"):
-            try:
-                execute("DELETE FROM dim_player WHERE player_id = :id", {"id": pid})
-            except DatabaseError as exc:
-                log("Refused", f"delete {player['player_name']} ({pid})")
-                st.error(f"Not deleted — nothing was changed. {exc}")
+            refs = reference_counts(pid)
+            if refs:
+                st.warning(
+                    f"**{player['player_name']}** appears in the scorecards — "
+                    + ", ".join(f"{n:,} {what}" for what, n in refs.items())
+                    + ". Deleting them would leave those rows pointing at nobody, so the "
+                      "database's foreign keys will refuse. You can try it: the transaction "
+                      "is rolled back and nothing changes.")
             else:
-                refresh()
-                log("Deleted", f"{player['player_name']} ({pid})")
-                st.session_state.pop("crud_del_pick", None)
-                st.session_state["crud_flash"] = (
-                    "success", f"Deleted {player['player_name']}.")
-                st.rerun()
+                st.success(f"Nothing refers to **{player['player_name']}**, so they can be deleted.")
+
+            sure = st.checkbox(f"Yes, delete {player['player_name']} ({pid})", key=f"crud_sure_{pid}")
+            if st.button("Delete player", type="primary", disabled=not sure, key="crud_delete"):
+                try:
+                    execute("DELETE FROM dim_player WHERE player_id = :id", {"id": pid})
+                except DatabaseError as exc:
+                    log("Refused", f"delete {player['player_name']} ({pid})")
+                    st.error(f"Not deleted — nothing was changed. {exc}")
+                else:
+                    refresh()
+                    log("Deleted", f"{player['player_name']} ({pid})")
+                    st.session_state.pop("crud_del_pick", None)
+                    st.session_state["crud_flash"] = (
+                        "success", f"Deleted {player['player_name']}.")
+                    st.rerun()
 
 # ---- this session's changes ------------------------------------------------
 if st.session_state.get("crud_log"):
