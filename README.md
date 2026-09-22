@@ -170,6 +170,7 @@ python etl/04_build_facts.py          # matches, innings, batting, bowling, part
 python etl/05_load_postgres.py        # create the schema, bulk-load, index, verify
 python etl/06_build_fact_over.py      # over-by-over table
 python etl/07_load_fact_over.py       # load it, index it, reconcile with innings totals
+python etl/08_load_player_styles.py   # batting and bowling styles (cricketdata project)
 ```
 
 Every loading step is idempotent: it drops and recreates its tables, so it's safe to run again.
@@ -233,5 +234,6 @@ cricbuzz_livestats/
 ## Data sources and credits
 
 - Historical data: [Cricsheet](https://cricsheet.org), ball-by-ball data for international cricket, used under its open licence.
+- Player batting and bowling styles: the open-source [cricketdata](https://github.com/robjhyndman/cricketdata) project's player table (GPL-3), itself compiled from ESPNcricinfo.
 - Live data: the [Cricbuzz Cricket API](https://rapidapi.com/cricketapilive/api/cricbuzz-cricket) on RapidAPI.
 - This is a student project and is not affiliated with Cricbuzz or the ICC.
