@@ -23,6 +23,14 @@ BOWLER_CREDITED = {"bowled", "caught", "lbw", "stumped",
 
 NOT_DISMISSALS = {"retired hurt", "retired not out"}
 
+# One team, two names. Swaziland renamed itself Eswatini in 2018, and the
+# T20I files use both (5 matches as Swaziland in 2021, the rest as
+# Eswatini). Left alone they would be two teams in every head-to-head.
+# Applied wherever a team NAME is turned into a team_id (03 and 04).
+TEAM_ALIASES = {
+    "Swaziland": "Eswatini",
+}
+
 
 def parse_outcome(outcome: dict) -> dict:
     """Flatten Cricsheet's outcome object into fact_match columns.

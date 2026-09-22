@@ -8,7 +8,8 @@ data/processed/squads.parquet           one row per team-sheet entry
 data/processed/batting.parquet          one row per player innings
 data/processed/bowling.parquet          one row per bowling spell
 data/processed/people.parquet           Cricsheet player registry
-etl/reference/venues_manual.csv         hand-corrected venue names/cities/countries
+etl/reference/venues_manual.csv         hand-corrected venue names/cities/countries (ODI grounds)
+etl/reference/venues_manual_t20.csv     the same, for grounds first seen in T20Is
 etl/reference/venue_capacity.csv        frozen Wikipedia capacity snapshot
 etl/reference/venue_capacity_manual.csv capacities researched by hand
 
@@ -41,6 +42,12 @@ import sys
 from pathlib import Path
 
 import pandas as pd
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from etl.cricsheet import TEAM_ALIASES
 
 
 # --------------------------------------------------------------------------
@@ -100,6 +107,13 @@ CITY_ALIASES = {
     # (3) a neighbourhood recorded instead of its city
     "Mirpur": "Dhaka",
     "Brighton": "Hove",                  # the ground is always called Hove
+    "Wong Nai Chung Gap": "Hong Kong",
+    "Spinaceto": "Rome",
+
+    # (4) T20I spellings: an administrative name, a region, a typo
+    "Kigali City": "Kigali",
+    "Lower Austria": "Seebarn",
+    "Port  Soif": "Port Soif",           # two spaces in the source
 }
 
 # Punctuation drift that splitting on the comma cannot see.
@@ -119,6 +133,29 @@ VENUE_CITY_OVERRIDES = {
     ("Windsor Park", "Dominica"): "Roseau",
     ("Niaz Stadium", "Sind"): "Hyderabad",
     ("Chilaw Marians Cricket Club Ground", "FTZ Sports Complex"): "Katunayake",
+
+    # T20Is: the state written where the city belongs ("Victoria").
+    ("GMHBA Stadium", "Victoria"): "Geelong",
+
+    # One ground, recorded under three or four nearby places. Kept on the
+    # city the ODI data already used, so the ground stays ONE venue.
+    ("Bready Cricket Club", "Derry"): "Magheramason",
+    ("Bready Cricket Club", "Londonderry"): "Magheramason",
+    ("Bready Cricket Club", "Bready"): "Magheramason",
+    ("Coolidge Cricket Ground", "Coolidge"): "North Sound",
+    ("Brian Lara Stadium", "Port of Spain"): "Tarouba",
+    ("Mission Road Ground", "Hong Kong"): "Mong Kok",
+    ("Punjab Cricket Association IS Bindra Stadium", "Mohali"): "Chandigarh",
+}
+
+# The country lookup is keyed on the ground's NAME, so two different grounds
+# that share a name inherit one country. These are keyed on name AND city.
+# "National Stadium, Hamilton" is in Bermuda, not Pakistan (Karachi's
+# National Stadium owns the name); Dar-es-Salaam's Gymkhana is in Tanzania,
+# not Kenya (Nairobi's Gymkhana owns it). Both grounds host T20Is only.
+VENUE_COUNTRY_OVERRIDES = {
+    ("National Stadium", "Hamilton"): "Bermuda",
+    ("Gymkhana Club Ground", "Dar-es-Salaam"): "Tanzania",
 }
 
 # Same ground recorded under two names.
@@ -184,6 +221,24 @@ VENUE_MERGES = {
     "Zayed Cricket Stadium": "Sheikh Zayed Stadium",
     "Dubai Sports City Cricket Stadium": "Dubai International Cricket Stadium",
     "Davies Park": "John Davies Oval",
+
+    # --- first seen in the T20I archive ---
+    "Simonds Stadium": "GMHBA Stadium",                  # Kardinia Park, renamed
+    "Subrata Roy Sahara Stadium": "Maharashtra Cricket Association Stadium",
+    "Sylhet Stadium": "Sylhet International Cricket Stadium",
+    "UKM-YSD Cricket Oval": "YSD-UKM Cricket Oval",      # words swapped
+    "Gahanga International Cricket Stadium. Rwanda":
+        "Gahanga International Cricket Stadium",         # country typed into the name
+    "Tafawa Balewa Square (TBS) Cricket Oval": "Tafawa Balewa Square Cricket Oval",
+    "National Sports Academy": "Vassil Levski National Sports Academy",
+    "St Georges Quilmes": "St George's College Ground",
+    "Sydney Parade": "Pembroke Cricket Club",            # the club's ground
+    "Wanderers": "Wanderers Cricket Ground",             # Windhoek
+    "Bready": "Bready Cricket Club",
+    "Bermuda National Stadium": "National Stadium",      # Hamilton, Bermuda
+    # "Ground 2, Independence Park" splits to a bare "Ground 2"
+    "Ground 1": "Independence Park Ground 1",
+    "Ground 2": "Independence Park Ground 2",
 }
 
 # Ten Caribbean nations field one international side. country says where the
@@ -202,9 +257,11 @@ HOME_NATION_FIXES = {
     "United States": "United States of America",
 }
 
-# Hosts that field no ODI side. NULL is the honest value: a string that
+# home_nation is only filled when that country actually fields an
+# international side in the archive (see build_venue). With T20Is included,
+# Spain and Malaysia now have sides of their own; Colombia and New Caledonia
+# host matches but field none. NULL is the honest value there: a string that
 # looks joinable and never joins is worse than a blank.
-NO_HOME_SIDE = {"Spain", "Malaysia"}
 
 
 # --------------------------------------------------------------------------
@@ -238,7 +295,13 @@ def build_venue(matches: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     the city, and sometimes the country, after a comma - which is where most
     of the apparently-missing city values were hiding.
     """
-    manual = pd.read_csv(REFERENCE / "venues_manual.csv")
+    # Two hand-checked files: the ODI grounds, and the grounds first seen in
+    # T20Is. Read together, so a ground is looked up the same way whichever
+    # format it first appeared in.
+    manual = pd.concat([
+        pd.read_csv(REFERENCE / "venues_manual.csv"),
+        pd.read_csv(REFERENCE / "venues_manual_t20.csv"),
+    ], ignore_index=True)
     manual["venue"] = manual["venue"].str.strip()
 
     country_map = manual.drop_duplicates("venue").set_index("venue")["country"]
@@ -278,6 +341,11 @@ def build_venue(matches: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
         VENUE_CITY_OVERRIDES.get((v, c), c)
         for v, c in zip(matches["venue_clean"], matches["city_final"])
     ]
+    matches["venue_country"] = [
+        VENUE_COUNTRY_OVERRIDES.get((v, c), k)
+        for v, c, k in zip(matches["venue_clean"], matches["city_final"],
+                           matches["venue_country"])
+    ]
 
     dim = (matches
            .groupby(["venue_clean", "city_final", "venue_country"], dropna=False)
@@ -289,7 +357,9 @@ def build_venue(matches: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     dim["home_nation"] = (dim["venue_country"]
                           .apply(lambda c: "West Indies" if c in WEST_INDIES else c)
                           .replace(HOME_NATION_FIXES))
-    dim.loc[dim["home_nation"].isin(NO_HOME_SIDE), "home_nation"] = None
+    # Keep home_nation only where that country fields a side in the data.
+    sides = set(matches["team1"]) | set(matches["team2"])
+    dim.loc[~dim["home_nation"].isin(sides), "home_nation"] = None
 
     # --- capacity, pass 1: the frozen Wikipedia snapshot, name + city ---
     cap = pd.read_csv(REFERENCE / "venue_capacity.csv")
@@ -542,6 +612,7 @@ def build_player(matches: pd.DataFrame) -> pd.DataFrame:
     refer to, with matches_played = 0 marking those never selected.
     """
     squads = pd.read_parquet(PROCESSED / "squads.parquet")
+    squads["team"] = squads["team"].replace(TEAM_ALIASES)
     people = pd.read_parquet(PROCESSED / "people.parquet")
     batting = pd.read_parquet(PROCESSED / "batting.parquet")
     bowling = pd.read_parquet(PROCESSED / "bowling.parquet")
@@ -678,8 +749,32 @@ def verify(matches, dim_venue, dim_team, dim_series, dim_date, dim_player) -> bo
           int((dim_venue["capacity"] > MAX_PLAUSIBLE_CAPACITY).sum()))
     check("duplicate venue (name, city)",
           int(dim_venue.duplicated(["venue_name", "city"]).sum()))
+    check("venues with no country", int(dim_venue["country"].isna().sum()))
+    check("venues with no city", int(dim_venue["city"].isna().sum()))
     check("duplicate player_id", int(dim_player.duplicated("player_id").sum()))
     check("players with no name", int(dim_player["player_name"].isna().sum()))
+
+    # utils/coverage.py is quoted by the README and the dashboard. If the
+    # ETL's output moves and those constants don't, the documentation
+    # becomes a lie. Warn rather than fail - stale prose is not a reason
+    # to refuse to write correct data.
+    try:
+        sys.path.insert(0, str(ROOT))
+        from utils.coverage import ARCHIVE
+        drift = {
+            "matches": (ARCHIVE["matches"], len(matches)),
+            "venues": (ARCHIVE["venues"], len(dim_venue)),
+            "teams": (ARCHIVE["teams"], len(dim_team)),
+            "players": (ARCHIVE["players"], len(dim_player)),
+            "series_editions": (ARCHIVE["series_editions"], len(dim_series)),
+        }
+        stale = {k: v for k, v in drift.items() if v[0] != v[1]}
+        if stale:
+            print("\n  WARNING: utils/coverage.py is out of date")
+            for k, (stated, actual) in stale.items():
+                print(f"    {k}: says {stated:,}, actually {actual:,}")
+    except ImportError:
+        print("  [skip] utils/coverage.py not importable")
 
     return ok
 
@@ -692,6 +787,10 @@ def main() -> int:
     print(f"project root: {ROOT}")
     matches = pd.read_parquet(PROCESSED / "matches.parquet")
     print(f"loaded {len(matches):,} matches")
+
+    # One team, one name, before any team is keyed (Swaziland -> Eswatini).
+    for col in ["team1", "team2", "toss_winner", "winner"]:
+        matches[col] = matches[col].replace(TEAM_ALIASES)
 
     dim_venue, matches = build_venue(matches)
     print(f"  dim_venue  {len(dim_venue):>6,} rows "

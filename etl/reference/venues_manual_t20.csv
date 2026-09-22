@@ -1,0 +1,155 @@
+venue,city,country,how,confidence
+7he Sevens Stadium,Dubai,United Arab Emirates,city,HIGH
+Achimota Senior Secondary School A Field,Accra,Ghana,city,HIGH
+Achimota Senior Secondary School B Field,Accra,Ghana,city,HIGH
+Albert Park 1,Suva,Fiji,city,HIGH
+Albert Park 2,Suva,Fiji,city,HIGH
+Albertslund Cricket Club,Copenhagen,Denmark,city,HIGH
+Arundel Castle Cricket Club Ground,Arundel,England,known ground; city was blank,HIGH
+Asian Institute of Technology Ground,Bangkok,Thailand,city,HIGH
+Ballpark Ground,Graz,Austria,city,HIGH
+Banks Field,Prague,Czech Republic,city,HIGH
+Bayer Uerdingen Cricket Ground,Krefeld,Germany,city,HIGH
+Bayuemas Oval,Kuala Lumpur,Malaysia,city,HIGH
+Belgrano Athletic Club Ground,Buenos Aires,Argentina,city,HIGH
+Bermuda National Stadium,Hamilton,Bermuda,city,HIGH
+Botkyrka Cricket Center,Stockholm,Sweden,city,HIGH
+Botswana Cricket Association Oval 1,Gaborone,Botswana,city,HIGH
+Botswana Cricket Association Oval 2,Gaborone,Botswana,city,HIGH
+Bready,Magheramason,Ireland,same ground as Bready Cricket Club (merged),HIGH
+Carrara Oval,Carrara,Australia,known ground; city was blank in one match,HIGH
+Centre for Cricket Development Ground,Windhoek,Namibia,city,HIGH
+Clayton Panama,Panama City,Panama,city,HIGH
+College Field,St Peter Port,Guernsey,city,HIGH
+Colts Cricket Club Ground,Colombo,Sri Lanka,city,HIGH
+Dreux Sport Cricket Club,Dreux,France,city,HIGH
+Ekeberg Cricket Ground 1,Oslo,Norway,city,HIGH
+Ekeberg Cricket Ground 2,Oslo,Norway,city,HIGH
+Entebbe Cricket Oval,Entebbe,Uganda,city,HIGH
+Estonian National Cricket and Rugby Field,Tallinn,Estonia,city,HIGH
+Europa Sports Complex,Gibraltar,Gibraltar,city,HIGH
+FB Fields,St Clement,Jersey,city,HIGH
+Faleata Oval No 2,Apia,Samoa,city,HIGH
+GB Oval,Szodliget,Hungary,city,HIGH
+GMHBA Stadium,Geelong,Australia,city,HIGH
+Gahanga B Ground,Kigali,Rwanda,city (Kigali City -> Kigali),HIGH
+Gahanga International Cricket Stadium,Kigali,Rwanda,city (Kigali City -> Kigali),HIGH
+Gahanga International Cricket Stadium. Rwanda,Kigali,Rwanda,same ground; country typed into the name (merged),HIGH
+Gelephu International Cricket Ground,Gelephu,Bhutan,city,HIGH
+GelsenTrabPark,Gelsenkirchen,Germany,city,HIGH
+Goldenacre,Edinburgh,Scotland,city,HIGH
+Grainville,St Saviour,Jersey,city,HIGH
+Ground 1,Port Vila,Vanuatu,city; renamed Independence Park Ground 1,MEDIUM
+Ground 2,Port Vila,Vanuatu,city; renamed Independence Park Ground 2,MEDIUM
+Guanggong International Cricket Stadium,Guangzhou,China,known ground; city was blank,HIGH
+Gucherre Cricket Ground,Albergaria,Portugal,city,HIGH
+Guernsey Rovers Athletic Club Ground,Port Soif,Guernsey,city (double space removed),HIGH
+Guttsta Wicked Cricket Club,Kolsva,Sweden,city,HIGH
+Happy Valley Ground,Episkopi,Cyprus,city,HIGH
+Happy Valley Ground 2,Episkopi,Cyprus,city,HIGH
+High Performance Oval,Windhoek,Namibia,city,HIGH
+Hong Kong Cricket Club,Hong Kong,Hong Kong,city (district Wong Nai Chung Gap -> Hong Kong),HIGH
+Hurlingham Club Ground,Buenos Aires,Argentina,city,HIGH
+ICC Academy Ground No 2,Dubai,United Arab Emirates,city,HIGH
+Independence Park,Port Vila,Vanuatu,city,HIGH
+Indian Association Ground,Singapore,Singapore,city,HIGH
+Integrated Polytechnic Regional Centre,Kigali,Rwanda,city (Kigali City -> Kigali),HIGH
+Ishoj Cricket Club,Ishoj,Denmark,city,HIGH
+Jimmy Powell Oval,George Town,Cayman Islands,city,HIGH
+Jinja Cricket Ground,Jinja,Uganda,city,HIGH
+Johor Cricket Academy Oval,Johor,Malaysia,city,HIGH
+Kaizuka Cricket Ground,Osaka,Japan,city,HIGH
+Kerava National Cricket Ground,Kerava,Finland,city,HIGH
+Kerrydale Oval,Gold Coast,Australia,city,HIGH
+King George V Sports Ground,Castel,Guernsey,city,HIGH
+Koge Cricket Club,Koge,Denmark,city,HIGH
+Koge Cricket Club 2,Koge,Denmark,city,HIGH
+Kolej Tuanku Jaafar Cricket Oval,Mantin,Malaysia,city,HIGH
+Korogi Sports Park,Nisshin,Japan,city,HIGH
+Kyambogo Cricket Oval,Kampala,Uganda,city,HIGH
+LC de Villiers Oval,Pretoria,South Africa,city,HIGH
+La Manga Club Bottom Ground,Murcia,Spain,city,HIGH
+La Manga Club Top Ground,Murcia,Spain,city,HIGH
+Lalabhai Contractor Stadium,Surat,India,city,HIGH
+Las Caballerizas,Mexico City,Mexico,city,HIGH
+Lisicji Jarak Cricket Ground,Belgrade,Serbia,city,HIGH
+Lochlands,Arbroath,Scotland,city,HIGH
+Los Pinos Polo Club 1,Bogota,Colombia,city,HIGH
+Los Pinos Polo Club 2,Bogota,Colombia,city,HIGH
+Los Reyes Polo Club,Guacima,Costa Rica,city,HIGH
+Lugogo Cricket Oval,Kampala,Uganda,city,HIGH
+Malek Cricket Ground,Ajman,United Arab Emirates,city,HIGH
+Malkerns Country Club oval,Malkerns,Eswatini,city,HIGH
+Maple Leaf North-East Ground,King City,Canada,city,HIGH
+Marina Ground,Corfu,Greece,city,HIGH
+Marrara Stadium,Darwin,Australia,city,HIGH
+Marsa Sports Club,Marsa,Malta,city,HIGH
+Meersen,Ghent,Belgium,city,HIGH
+Mercantile Cricket Association Ground,Colombo,Sri Lanka,city,HIGH
+Mladost Cricket Ground,Zagreb,Croatia,city,HIGH
+Moara Vlasiei Cricket Ground,Ilfov County,Romania,city (blank in 3 matches),HIGH
+Morodok Techo National Stadium,Phnom Penh,Cambodia,city,HIGH
+Moses Mabhida Stadium,Durban,South Africa,city,HIGH
+N'Du Stadium,Noumea,New Caledonia,city,HIGH
+Nassau County International Cricket Stadium,New York,United States,city,HIGH
+National Sports Academy,Sofia,Bulgaria,same ground as Vassil Levski National Sports Academy (merged),MEDIUM
+New Farnley CC,Leeds,England,city,HIGH
+Nigeria Cricket Federation Oval 1,Abuja,Nigeria,city,HIGH
+Nigeria Cricket Federation Oval 2,Abuja,Nigeria,city,HIGH
+Pembroke Cricket Club,Dublin,Ireland,city,HIGH
+Pierre Werner Cricket Ground,Walferdange,Luxembourg,city,HIGH
+Pokhara Rangasala,Pokhara,Nepal,city,HIGH
+Prairie View Cricket Complex,Houston,United States,city,HIGH
+Pukekura Park,New Plymouth,New Zealand,city,HIGH
+Reforma Athletic Club,Naucalpan,Mexico,city,HIGH
+Roma Cricket Ground,Rome,Italy,city (district Spinaceto -> Rome),HIGH
+Royal Brussels Cricket Club Ground,Waterloo,Belgium,city,HIGH
+Royal Selangor Club,Kuala Lumpur,Malaysia,city,HIGH
+SSC Karlsruhe,Karlsruhe,Germany,city,HIGH
+San Albano,Buenos Aires,Argentina,known ground (Burzaco); city was blank,MEDIUM
+Sano International Cricket Ground,Sano,Japan,city,HIGH
+Sano International Cricket Ground 2,Sano,Japan,city,HIGH
+Santarem Cricket Ground,Albergaria,Portugal,city,HIGH
+Sao Fernando Polo and Cricket Club,Seropedica,Brazil,city,HIGH
+Scott Page Field,Prague,Czech Republic,city,HIGH
+Seebarn Cricket Centre,Seebarn,Austria,city (region Lower Austria -> Seebarn),HIGH
+Selangor Turf Club,Kuala Lumpur,Malaysia,city,HIGH
+Shrimant Madhavrao Scindia Cricket Stadium,Gwalior,India,city,HIGH
+Sikh Union Club Ground,Nairobi,Kenya,city,HIGH
+Simar Cricket Ground,Rome,Italy,city,HIGH
+Simonds Stadium,Geelong,Australia,old name of GMHBA Stadium (merged); city was the state,HIGH
+Singapore National Cricket Ground,Singapore,Singapore,city,HIGH
+Solvangs Park,Copenhagen,Denmark,city,HIGH
+Sportpark Harga,Schiedam,The Netherlands,city,HIGH
+St Albans Club,Buenos Aires,Argentina,city,HIGH
+St George's College Ground,Buenos Aires,Argentina,city,HIGH
+St Georges Quilmes,Buenos Aires,Argentina,same ground as St George's College Ground (merged),MEDIUM
+Stadium Australia,Sydney,Australia,city,HIGH
+Stars Arena Hofstade,Zemst,Belgium,city,HIGH
+Stubberudmyra Cricket Ground,Oslo,Norway,city,HIGH
+Subrata Roy Sahara Stadium,Pune,India,old name of Maharashtra Cricket Association Stadium (merged),HIGH
+Svanholm Park,Brondby,Denmark,city,HIGH
+Sydney Parade,Dublin,Ireland,Pembroke Cricket Club's ground (merged),HIGH
+Sydney Showground Stadium,Sydney,Australia,city,HIGH
+Sylhet Stadium,Sylhet,Bangladesh,same ground as Sylhet International Cricket Stadium (merged),HIGH
+TCA Oval,Blantyre,Malawi,city,HIGH
+Tafawa Balewa Square (TBS) Cricket Oval,Lagos,Nigeria,same ground as Tafawa Balewa Square Cricket Oval (merged),HIGH
+Tafawa Balewa Square Cricket Oval,Lagos,Nigeria,city,HIGH
+Tikkurila Cricket Ground,Vantaa,Finland,city,HIGH
+Tolerance Oval,Abu Dhabi,United Arab Emirates,city,HIGH
+Turf City B Cricket Ground,Singapore,Singapore,city,HIGH
+UKM-YSD Cricket Oval,Bangi,Malaysia,same ground as YSD-UKM Cricket Oval (merged),HIGH
+Udayana Cricket Ground,Bali,Indonesia,city,HIGH
+University of Dar-es-Salaam Ground,Dar-es-Salaam,Tanzania,city,HIGH
+University of Doha for Science and Technology,Doha,Qatar,city,HIGH
+University of Lagos Cricket Oval,Lagos,Nigeria,city,HIGH
+Vanuatu Cricket Ground,Port Vila,Vanuatu,city,HIGH
+Vanuatu Cricket Ground (Oval 2),Port Vila,Vanuatu,city,HIGH
+Vassil Levski National Sports Academy,Sofia,Bulgaria,city,HIGH
+Velden Cricket Ground,Latschach,Austria,city,HIGH
+Wanderers,Windhoek,Namibia,same ground as Wanderers Cricket Ground (merged),HIGH
+West End Park International Cricket Stadium,Doha,Qatar,city,HIGH
+White Hill Field,Hamilton,Bermuda,city,HIGH
+Woodley Cricket Field,Los Angeles,United States,city,HIGH
+Yeonhui Cricket Ground,Incheon,South Korea,city,HIGH
+Zhejiang University of Technology Cricket Field,Hangzhou,China,city,HIGH

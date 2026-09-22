@@ -22,7 +22,7 @@ BUNDLES = {
 
     # Uncomment once the ODI pipeline works end to end:
     # "tests_json.zip": "https://cricsheet.org/downloads/tests_json.zip",
-    # "t20s_json.zip": "https://cricsheet.org/downloads/t20s_json.zip",
+"t20s_json.zip": "https://cricsheet.org/downloads/t20s_json.zip",
 }
 
 

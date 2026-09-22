@@ -25,8 +25,8 @@ from etl.cricsheet import parse_innings, parse_match_info
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
 PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
 
-# Add tests_json.zip and t20s_json.zip once the ODI pipeline is proven.
-ARCHIVES = ["odis_json.zip"]
+# One-day internationals and T20 internationals. Tests are not loaded.
+ARCHIVES = ["odis_json.zip", "t20s_json.zip"]
 
 
 def parse_archive(zip_path: Path) -> dict:

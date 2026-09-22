@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="190" height="64" viewBox="0 0 190 64">
+  <!-- three stumps, two bails and a ball -->
+  <rect x="4"  y="12" width="6" height="44" rx="2.5" fill="#C7A45A"/>
+  <rect x="15" y="12" width="6" height="44" rx="2.5" fill="#C7A45A"/>
+  <rect x="26" y="12" width="6" height="44" rx="2.5" fill="#C7A45A"/>
+  <rect x="4.5"  y="7" width="13" height="3.6" rx="1.8" fill="#DABD80"/>
+  <rect x="18.5" y="7" width="13" height="3.6" rx="1.8" fill="#DABD80"/>
+  <circle cx="44" cy="49" r="7" fill="#B8423C"/>
+  <path d="M40 44.5 Q44 49 48 53.5" stroke="#E7D8CB" stroke-width="1.2" fill="none"/>
+  <!-- wordmark on two lines: light on the dark green sidebar -->
+  <text x="60" y="30" textLength="120" lengthAdjust="spacingAndGlyphs"
+        font-family="Inter, Segoe UI, Arial, sans-serif" font-size="22"
+        font-weight="800" fill="#E7EFEA">CRICBUZZ</text>
+  <text x="60" y="56" textLength="120" lengthAdjust="spacingAndGlyphs"
+        font-family="Inter, Segoe UI, Arial, sans-serif" font-size="22"
+        font-weight="800" fill="#C7A45A">LIVESTATS</text>
+</svg>

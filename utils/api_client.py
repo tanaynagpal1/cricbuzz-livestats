@@ -29,19 +29,60 @@ API_HOST = os.getenv("RAPIDAPI_HOST", "cricbuzz-cricket.p.rapidapi.com")
 
 TIMEOUT = 20
 
-# How long a cached response stays fresh, in seconds. Live scores go stale in
-# half a minute; the list of available stat types barely changes in a year.
-TTL_LIVE = 30
+# How long a cached response stays fresh, in seconds. The live strip shows on
+# every page, so live scores are kept for 2 minutes rather than 30 seconds:
+# the quota is 200 calls a month, and a strip that refreshed on every click
+# would spend it in a few days.
+TTL_LIVE = 120
 TTL_MATCH_LIST = 300
 TTL_SCORECARD = 3600
 TTL_REFERENCE = 86400
+TTL_RECORDS = 7 * 86400   # career leaderboards change slowly: refresh weekly
 
 # The API's own format codes, from the get-records filter block.
 MATCH_TYPE_IDS = {"test": 1, "odi": 2, "t20": 3}
 
 
+QUOTA_FILE = CACHE_DIR / "_quota.json"
+
+
 class CricbuzzError(RuntimeError):
     """The API could not be reached, or returned something unusable."""
+
+
+def _save_quota(response: requests.Response) -> None:
+    """Remember how many calls RapidAPI says are left this month.
+
+    RapidAPI adds two headers to every reply: the monthly limit and how many
+    requests remain. Saving them lets the sidebar show real usage instead of
+    a guess. Only real network calls reach here; cached answers cost nothing.
+    """
+    limit = response.headers.get("x-ratelimit-requests-limit")
+    remaining = response.headers.get("x-ratelimit-requests-remaining")
+    if limit is None or remaining is None:
+        return
+    try:
+        QUOTA_FILE.write_text(json.dumps({
+            "limit": int(limit),
+            "remaining": int(remaining),
+            "checked_at": time.time(),
+        }), encoding="utf-8")
+    except (OSError, ValueError):
+        pass
+
+
+def get_quota() -> dict | None:
+    """The last quota RapidAPI reported, or None if no call has been made yet."""
+    try:
+        return json.loads(QUOTA_FILE.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+
+
+def cache_age(cache_name: str) -> float | None:
+    """Seconds since a cached response was saved, or None if never."""
+    path = _cache_path(cache_name)
+    return time.time() - path.stat().st_mtime if path.exists() else None
 
 
 def _cache_path(name: str) -> Path:
@@ -96,6 +137,8 @@ def _get(path: str, cache_name: str, max_age: int,
     except requests.exceptions.RequestException as exc:
         raise CricbuzzError(f"Could not reach the API: {exc}") from None
 
+    _save_quota(response)
+
     if response.status_code in (401, 403):
         raise CricbuzzError("API key rejected, or not subscribed to this API")
     if response.status_code == 429:
@@ -106,6 +149,9 @@ def _get(path: str, cache_name: str, max_age: int,
     # 204, or a 200 with an empty body, means "nothing is happening right now".
     # That is a normal answer, not an error.
     if response.status_code == 204 or not response.content.strip():
+        # Cache the empty answer too. Otherwise, with no cricket on, every
+        # page click would ask again and burn through the monthly quota.
+        _write_cache(cache_name, {})
         return {}
 
     try:
@@ -179,6 +225,17 @@ def get_stat_types() -> dict:
     return _get("/stats/v1/topstats", "topstats", TTL_REFERENCE)
 
 
+def records_cache_name(stats_type: str, match_type: int | None = None,
+                       year: int | None = None, team: int | None = None) -> str:
+    """The disk-cache name for one leaderboard, so a page can check whether
+    it is already saved (free) before asking the API (costs one call)."""
+    parts = ["records", stats_type]
+    for name, value in (("matchType", match_type), ("year", year), ("team", team)):
+        if value is not None:
+            parts.append(f"{name}{value}")
+    return "_".join(parts)
+
+
 def get_records(stats_type: str, match_type: int | None = None,
                 year: int | None = None, team: int | None = None) -> dict:
     """Fetch one statistic from the menu.
@@ -190,13 +247,13 @@ def get_records(stats_type: str, match_type: int | None = None,
         team: restrict to one team's players, by teamId.
     """
     params = {"statsType": stats_type}
-    cache_parts = ["records", stats_type]
-
     for name, value in (("matchType", match_type), ("year", year),
                         ("team", team)):
         if value is not None:
             params[name] = value
-            cache_parts.append(f"{name}{value}")
 
-    return _get("/stats/v1/topstats", "_".join(cache_parts),
-                TTL_REFERENCE, params=params)
+    # The records endpoint needs the category "/0" in its path; without it
+    # the API just returns the menu again.
+    return _get("/stats/v1/topstats/0",
+                records_cache_name(stats_type, match_type, year, team),
+                TTL_RECORDS, params=params)

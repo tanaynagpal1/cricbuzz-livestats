@@ -1,0 +1,22 @@
+# Streamlit's own theme settings. These colour the built-in parts of the app
+# (buttons, sliders, tabs, the sidebar, tables). utils/theme.py styles the
+# custom parts (banner, stat tiles, cards) with the SAME colours.
+
+[theme]
+base = "light"
+primaryColor = "#A8894E"               # gold: buttons, selected tabs, sliders
+backgroundColor = "#F6F7F2"            # cream page background
+secondaryBackgroundColor = "#E9EEE7"   # pale green-grey: inputs, code blocks
+textColor = "#132018"                  # near-black green ink
+linkColor = "#8A6D32"
+font = "Inter:https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+headingFont = "Inter:https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+baseRadius = "12px"
+buttonRadius = "10px"
+showSidebarBorder = false
+
+[theme.sidebar]
+backgroundColor = "#0E2118"            # deep outfield green
+secondaryBackgroundColor = "#173D2C"
+textColor = "#E7EFEA"
+primaryColor = "#C7A45A"
