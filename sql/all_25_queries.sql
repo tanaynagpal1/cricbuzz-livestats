@@ -229,7 +229,7 @@ ORDER BY SUM(b.runs_scored) DESC;
 
 -- id: 12
 -- title: Home vs away wins
--- question: For each team, count wins at home and away, where home means the venue's country matches the team's country.
+-- question: For each team and format, count wins at home and away, where home means the venue's country matches the team's country.
 -- params: none
 
 -- Step 1 turns each match into TWO rows, one per team, so every team can
@@ -237,13 +237,16 @@ ORDER BY SUM(b.runs_scored) DESC;
 -- view: its own ground = Home, the opponent's ground = Away, anywhere
 -- else = Neutral. home_nation is used rather than country so that West
 -- Indies are at home in Jamaica, Barbados and Trinidad.
+-- Split by format: ODI and T20I numbers are never mixed in one row,
+-- because a good ODI average and a good T20I average are different things.
 WITH team_match AS (
-    SELECT match_id, team1_id AS team_id, team2_id AS opponent_id, venue_id, winner_id FROM fact_match
+    SELECT match_id, match_format, team1_id AS team_id, team2_id AS opponent_id, venue_id, winner_id FROM fact_match
     UNION ALL
-    SELECT match_id, team2_id,            team1_id,                venue_id, winner_id FROM fact_match
+    SELECT match_id, match_format, team2_id,            team1_id,                venue_id, winner_id FROM fact_match
 ),
 labelled AS (
     SELECT  t.team_display,
+            tm.match_format,
             CASE WHEN v.home_nation = t.team_name THEN 'Home'
                  WHEN v.home_nation = o.team_name THEN 'Away'
                  ELSE 'Neutral' END                     AS venue_type,
@@ -254,6 +257,7 @@ labelled AS (
     JOIN    dim_venue v ON v.venue_id = tm.venue_id
 )
 SELECT  team_display                                                AS team,
+        match_format                                                AS format,
         COUNT(*) FILTER (WHERE venue_type = 'Home')                 AS home_matches,
         COUNT(*) FILTER (WHERE venue_type = 'Home' AND won)         AS home_wins,
         COUNT(*) FILTER (WHERE venue_type = 'Away')                 AS away_matches,
@@ -261,8 +265,8 @@ SELECT  team_display                                                AS team,
         COUNT(*) FILTER (WHERE venue_type = 'Neutral')              AS neutral_matches,
         COUNT(*) FILTER (WHERE venue_type = 'Neutral' AND won)      AS neutral_wins
 FROM    labelled
-GROUP BY team_display
-ORDER BY COUNT(*) FILTER (WHERE won) DESC, team;
+GROUP BY team_display, match_format
+ORDER BY format, COUNT(*) FILTER (WHERE won) DESC, team;
 
 
 -- id: 13
@@ -318,36 +322,42 @@ ORDER BY total_wickets DESC, avg_economy;
 
 -- id: 15
 -- title: Performance in close matches
--- question: In close matches (won by under 50 runs or under 5 wickets), show each player's average runs, close matches played and close matches won by their team.
+-- question: In close matches (won by under 50 runs or under 5 wickets), show each player's average runs, close matches played and close matches won by their team, per format.
 -- params: none
 
 -- Only players with 10+ close-match innings are listed, so one lucky knock
 -- doesn't top the table.
+-- Split by format: ODI and T20I numbers are never mixed in one row,
+-- because a good ODI average and a good T20I average are different things.
 WITH close_matches AS (
-    SELECT  match_id, winner_id
+    SELECT  match_id, match_format, winner_id
     FROM    fact_match
     WHERE   (victory_type = 'runs'    AND victory_margin < 50)
        OR   (victory_type = 'wickets' AND victory_margin < 5)
 )
 SELECT  p.player_name,
         p.primary_team,
+        c.match_format                                                 AS format,
         COUNT(DISTINCT b.match_id)                                     AS close_matches,
         ROUND(AVG(b.runs_scored), 2)                                   AS avg_runs,
         COUNT(DISTINCT b.match_id) FILTER (WHERE b.team_id = c.winner_id) AS close_matches_won
 FROM    fact_batting  b
 JOIN    close_matches c ON c.match_id  = b.match_id
 JOIN    dim_player    p ON p.player_id = b.player_id
-GROUP BY p.player_id, p.player_name, p.primary_team
+GROUP BY p.player_id, p.player_name, p.primary_team, c.match_format
 HAVING  COUNT(DISTINCT b.match_id) >= 10
-ORDER BY avg_runs DESC;
+ORDER BY format, avg_runs DESC;
 
 
 -- id: 16
 -- title: Batting by year since 2020
--- question: For matches since 2020, show each player's average runs per match and average strike rate per year, for players with 5+ matches that year.
+-- question: For matches since 2020, show each player's average runs per match and average strike rate per year and format, for players with 5+ matches that year.
 -- params: none
 
+-- Split by format: ODI and T20I numbers are never mixed in one row,
+-- because a good ODI average and a good T20I average are different things.
 SELECT  p.player_name,
+        m.match_format                                                    AS format,
         d.year,
         COUNT(DISTINCT b.match_id)                                        AS matches,
         ROUND(AVG(b.runs_scored), 2)                                      AS avg_runs,
@@ -357,19 +367,22 @@ JOIN    fact_match   m ON m.match_id  = b.match_id
 JOIN    dim_date     d ON d.date_key  = m.date_key
 JOIN    dim_player   p ON p.player_id = b.player_id
 WHERE   d.year >= 2020
-GROUP BY p.player_id, p.player_name, d.year
+GROUP BY p.player_id, p.player_name, m.match_format, d.year
 HAVING  COUNT(DISTINCT b.match_id) >= 5
-ORDER BY p.player_name, d.year;
+ORDER BY p.player_name, format, d.year;
 
 
 -- id: 17
 -- title: Does winning the toss help?
--- question: What percentage of matches are won by the toss winner, broken down by toss decision (bat first or bowl first)?
+-- question: What percentage of matches are won by the toss winner, broken down by format and toss decision (bat first or bowl first)?
 -- params: none
 
 -- Matches with no winner (no result, abandoned, tie) are excluded: they
 -- can't be won by anyone, so they would drag every percentage down.
-SELECT  CASE toss_decision WHEN 'bat'   THEN 'Chose to bat first'
+-- Split by format: ODI and T20I numbers are never mixed in one row,
+-- because a good ODI average and a good T20I average are different things.
+SELECT  match_format                                                     AS format,
+        CASE toss_decision WHEN 'bat'   THEN 'Chose to bat first'
                            WHEN 'field' THEN 'Chose to bowl first' END   AS toss_decision,
         COUNT(*)                                                         AS matches,
         COUNT(*) FILTER (WHERE toss_winner_id = winner_id)               AS toss_winner_won,
@@ -378,8 +391,8 @@ SELECT  CASE toss_decision WHEN 'bat'   THEN 'Chose to bat first'
 FROM    fact_match
 WHERE   winner_id IS NOT NULL
   AND   toss_decision IS NOT NULL
-GROUP BY toss_decision
-ORDER BY toss_decision;
+GROUP BY match_format, toss_decision
+ORDER BY format, toss_decision;
 
 
 -- id: 18
@@ -407,15 +420,18 @@ ORDER BY economy, total_wickets DESC;
 
 -- id: 19
 -- title: Most consistent batters since 2022
--- question: Average runs and standard deviation of runs per batter since 2022, counting only innings of 10+ balls. Lower deviation = more consistent.
+-- question: Average runs and standard deviation of runs per batter and format since 2022, counting only innings of 10+ balls. Lower deviation = more consistent.
 -- params: none
 
 -- Two extra rules, both needed for a sensible answer:
 --   * 10+ qualifying innings — a deviation over 2 or 3 innings means nothing.
 --   * average of 30+ — otherwise tail-enders who ALWAYS score little top the
 --     list as the "most consistent batters".
+-- Split by format: ODI and T20I numbers are never mixed in one row,
+-- because a good ODI average and a good T20I average are different things.
 SELECT  p.player_name,
         p.primary_team,
+        m.match_format                      AS format,
         COUNT(*)                            AS innings,
         ROUND(AVG(b.runs_scored), 2)        AS avg_runs,
         ROUND(STDDEV(b.runs_scored), 2)     AS std_dev_runs
@@ -424,10 +440,10 @@ JOIN    fact_match   m ON m.match_id  = b.match_id
 JOIN    dim_player   p ON p.player_id = b.player_id
 WHERE   m.match_date >= DATE '2022-01-01'
   AND   b.balls_faced >= 10
-GROUP BY p.player_id, p.player_name, p.primary_team
+GROUP BY p.player_id, p.player_name, p.primary_team, m.match_format
 HAVING  COUNT(*) >= 10
    AND  AVG(b.runs_scored) >= 30
-ORDER BY std_dev_runs;
+ORDER BY format, std_dev_runs;
 
 
 -- id: 20
@@ -551,13 +567,15 @@ ORDER BY r.match_format, r.format_rank;
 
 -- id: 22
 -- title: Head-to-head records (last 3 years)
--- question: For team pairs with 5+ matches in the last 3 years: matches, wins each, average victory margin, wins batting first vs chasing, venues used, and win % for each team.
+-- question: For team pairs with 5+ matches in one format in the last 3 years: matches, wins each, average victory margin, wins batting first vs chasing, venues used, and win % for each team.
 -- params: none
 
 -- Each pair is stored once, lower team_id first (team_a), so India–Australia
 -- and Australia–India count as the same rivalry. "Last 3 years" counts back
 -- from the latest match in the archive. Margins are split into runs and
 -- wickets, because averaging "40 runs" with "6 wickets" means nothing.
+-- Split by format: ODI and T20I numbers are never mixed in one row,
+-- because a good ODI average and a good T20I average are different things.
 WITH recent AS (
     SELECT  m.*,
             LEAST(m.team1_id, m.team2_id)    AS team_a,
@@ -567,7 +585,8 @@ WITH recent AS (
     JOIN    fact_innings i ON i.match_id = m.match_id AND i.innings_no = 1
     WHERE   m.match_date >= (SELECT MAX(match_date) FROM fact_match) - INTERVAL '3 years'
 )
-SELECT  ta.team_display                                                         AS team_a,
+SELECT  r.match_format                                                          AS format,
+        ta.team_display                                                         AS team_a,
         tb.team_display                                                         AS team_b,
         COUNT(*)                                                                AS matches,
         COUNT(DISTINCT r.venue_id)                                              AS venues,
@@ -586,14 +605,14 @@ SELECT  ta.team_display                                                         
 FROM    recent   r
 JOIN    dim_team ta ON ta.team_id = r.team_a
 JOIN    dim_team tb ON tb.team_id = r.team_b
-GROUP BY ta.team_display, tb.team_display
+GROUP BY r.match_format, ta.team_display, tb.team_display
 HAVING  COUNT(*) >= 5
-ORDER BY matches DESC, team_a;
+ORDER BY format, matches DESC, team_a;
 
 
 -- id: 23
 -- title: Recent form
--- question: Using each player's last 10 innings: average of last 5 vs last 10, strike-rate trend, scores of 50+, consistency (std dev), and a form label.
+-- question: Using each player's last 10 innings in each format: average of last 5 vs last 10, strike-rate trend, scores of 50+, consistency (std dev), and a form label.
 -- params: none
 
 -- ROW_NUMBER numbers each player's innings newest-first (1 = latest).
@@ -604,15 +623,18 @@ ORDER BY matches DESC, team_a;
 --   Good       30+
 --   Average    18+
 --   Poor       below 18
+-- Split by format: ODI and T20I numbers are never mixed in one row,
+-- because a good ODI average and a good T20I average are different things.
 WITH numbered AS (
-    SELECT  b.player_id, b.runs_scored, b.balls_faced, m.match_date,
-            ROW_NUMBER() OVER (PARTITION BY b.player_id
+    SELECT  b.player_id, m.match_format, b.runs_scored, b.balls_faced, m.match_date,
+            ROW_NUMBER() OVER (PARTITION BY b.player_id, m.match_format
                                ORDER BY m.match_date DESC, m.match_id DESC) AS rn
     FROM    fact_batting b
     JOIN    fact_match   m ON m.match_id = b.match_id
 ),
 last10 AS (
     SELECT  player_id,
+            match_format,
             MAX(match_date)                                                       AS last_innings,
             COUNT(*)                                                              AS innings,
             AVG(runs_scored) FILTER (WHERE rn <= 5)                               AS avg_last5,
@@ -624,10 +646,11 @@ last10 AS (
             STDDEV(runs_scored)                                                   AS std_dev
     FROM    numbered
     WHERE   rn <= 10
-    GROUP BY player_id
+    GROUP BY player_id, match_format
 )
 SELECT  p.player_name,
         p.primary_team,
+        l.match_format                          AS format,
         l.last_innings,
         ROUND(l.avg_last5, 1)                   AS avg_last5,
         ROUND(l.avg_last10, 1)                  AS avg_last10,
@@ -646,29 +669,35 @@ FROM    last10     l
 JOIN    dim_player p ON p.player_id = l.player_id
 WHERE   l.innings = 10
   AND   l.last_innings >= (SELECT MAX(match_date) FROM fact_match) - INTERVAL '1 year'
-ORDER BY l.avg_last5 DESC;
+ORDER BY format, l.avg_last5 DESC;
 
 
 -- id: 24
 -- title: Best batting partnerships
--- question: For pairs of consecutive batsmen (positions differ by 1) with 5+ partnerships: average runs, stands over 50, highest stand and success rate. Rank the best pairs.
+-- question: For pairs of consecutive batsmen (positions differ by 1) with 5+ partnerships in a format: average runs, stands over 50, highest stand and success rate. Rank the best pairs.
 -- params: none
 
 -- LEAST/GREATEST put each pair in a fixed order, so "Rohit & Dhawan" and
 -- "Dhawan & Rohit" are counted as one pair. Success rate = share of their
 -- stands that reached 50 (a "good" partnership).
+-- Split by format: ODI and T20I numbers are never mixed in one row,
+-- because a good ODI average and a good T20I average are different things.
 WITH stands AS (
     SELECT  LEAST(pt.batter1_id, pt.batter2_id)    AS player_a,
             GREATEST(pt.batter1_id, pt.batter2_id) AS player_b,
+            m.match_format,
             pt.runs
     FROM    fact_partnership pt
+    JOIN    fact_match   m  ON m.match_id  = pt.match_id
     JOIN    fact_batting b1 ON b1.match_id = pt.match_id AND b1.innings_no = pt.innings_no
                            AND b1.player_id = pt.batter1_id
     JOIN    fact_batting b2 ON b2.match_id = pt.match_id AND b2.innings_no = pt.innings_no
                            AND b2.player_id = pt.batter2_id
     WHERE   ABS(b1.batting_position - b2.batting_position) = 1
 )
-SELECT  RANK() OVER (ORDER BY AVG(s.runs) DESC)                  AS rank,
+SELECT  s.match_format                                            AS format,
+        RANK() OVER (PARTITION BY s.match_format
+                     ORDER BY AVG(s.runs) DESC)                  AS rank,
         pa.player_name || ' & ' || pb.player_name                 AS pair,
         COUNT(*)                                                  AS partnerships,
         ROUND(AVG(s.runs), 1)                                     AS avg_runs,
@@ -678,14 +707,14 @@ SELECT  RANK() OVER (ORDER BY AVG(s.runs) DESC)                  AS rank,
 FROM    stands     s
 JOIN    dim_player pa ON pa.player_id = s.player_a
 JOIN    dim_player pb ON pb.player_id = s.player_b
-GROUP BY s.player_a, s.player_b, pa.player_name, pb.player_name
+GROUP BY s.match_format, s.player_a, s.player_b, pa.player_name, pb.player_name
 HAVING  COUNT(*) >= 5
-ORDER BY rank;
+ORDER BY format, rank;
 
 
 -- id: 25
 -- title: Career trajectory by quarter
--- question: Track each player's quarterly runs and strike rate, compare each quarter with the previous one, and label the career phase (Ascending, Declining, Stable). Players with 6+ quarters of 3+ matches only.
+-- question: Track each player's quarterly runs and strike rate in each format, compare each quarter with the previous one, and label the career phase (Ascending, Declining, Stable). Players with 6+ quarters of 3+ matches only.
 -- params: none
 
 -- Step 1  quarterly: one row per player per quarter (3+ matches only).
@@ -694,8 +723,11 @@ ORDER BY rank;
 -- Step 3  per player: count the labels and compare the first 3 quarters
 --         with the last 3. Last 3 more than 10% higher = Career Ascending,
 --         more than 10% lower = Career Declining, otherwise Career Stable.
+-- Split by format: ODI and T20I numbers are never mixed in one row,
+-- because a good ODI average and a good T20I average are different things.
 WITH quarterly AS (
     SELECT  b.player_id,
+            m.match_format,
             d.year,
             d.quarter,
             d.year || '-Q' || d.quarter                                  AS period,
@@ -705,21 +737,22 @@ WITH quarterly AS (
     FROM    fact_batting b
     JOIN    fact_match   m ON m.match_id = b.match_id
     JOIN    dim_date     d ON d.date_key = m.date_key
-    GROUP BY b.player_id, d.year, d.quarter
+    GROUP BY b.player_id, m.match_format, d.year, d.quarter
     HAVING  COUNT(DISTINCT b.match_id) >= 3
 ),
 compared AS (
     SELECT  q.*,
             LAG(avg_runs) OVER w                                         AS prev_avg,
             ROW_NUMBER()  OVER w                                         AS q_first,
-            ROW_NUMBER()  OVER (PARTITION BY player_id
+            ROW_NUMBER()  OVER (PARTITION BY player_id, match_format
                                 ORDER BY year DESC, quarter DESC)        AS q_last,
-            COUNT(*)      OVER (PARTITION BY player_id)                  AS quarters
+            COUNT(*)      OVER (PARTITION BY player_id, match_format)    AS quarters
     FROM    quarterly q
-    WINDOW  w AS (PARTITION BY player_id ORDER BY year, quarter)
+    WINDOW  w AS (PARTITION BY player_id, match_format ORDER BY year, quarter)
 ),
 summary AS (
     SELECT  player_id,
+            match_format,
             MAX(quarters)                                                AS quarters,
             MIN(period)                                                  AS first_quarter,
             MAX(period)                                                  AS last_quarter,
@@ -732,11 +765,12 @@ summary AS (
             AVG(strike_rate) FILTER (WHERE q_first <= 3)                 AS early_sr,
             AVG(strike_rate) FILTER (WHERE q_last  <= 3)                 AS recent_sr
     FROM    compared
-    GROUP BY player_id
+    GROUP BY player_id, match_format
     HAVING  MAX(quarters) >= 6
 )
 SELECT  p.player_name,
         p.primary_team,
+        s.match_format              AS format,
         s.quarters,
         s.first_quarter,
         s.last_quarter,
@@ -752,6 +786,6 @@ SELECT  p.player_name,
              ELSE 'Career Stable' END                                    AS career_phase
 FROM    summary    s
 JOIN    dim_player p ON p.player_id = s.player_id
-ORDER BY s.recent_avg - s.early_avg DESC;
+ORDER BY format, s.recent_avg - s.early_avg DESC;
 
 

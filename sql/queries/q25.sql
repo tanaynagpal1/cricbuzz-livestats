@@ -1,6 +1,6 @@
 -- id: 25
 -- title: Career trajectory by quarter
--- question: Track each player's quarterly runs and strike rate, compare each quarter with the previous one, and label the career phase (Ascending, Declining, Stable). Players with 6+ quarters of 3+ matches only.
+-- question: Track each player's quarterly runs and strike rate in each format, compare each quarter with the previous one, and label the career phase (Ascending, Declining, Stable). Players with 6+ quarters of 3+ matches only.
 -- params: none
 
 -- Step 1  quarterly: one row per player per quarter (3+ matches only).
@@ -9,8 +9,11 @@
 -- Step 3  per player: count the labels and compare the first 3 quarters
 --         with the last 3. Last 3 more than 10% higher = Career Ascending,
 --         more than 10% lower = Career Declining, otherwise Career Stable.
+-- Split by format: ODI and T20I numbers are never mixed in one row,
+-- because a good ODI average and a good T20I average are different things.
 WITH quarterly AS (
     SELECT  b.player_id,
+            m.match_format,
             d.year,
             d.quarter,
             d.year || '-Q' || d.quarter                                  AS period,
@@ -20,21 +23,22 @@ WITH quarterly AS (
     FROM    fact_batting b
     JOIN    fact_match   m ON m.match_id = b.match_id
     JOIN    dim_date     d ON d.date_key = m.date_key
-    GROUP BY b.player_id, d.year, d.quarter
+    GROUP BY b.player_id, m.match_format, d.year, d.quarter
     HAVING  COUNT(DISTINCT b.match_id) >= 3
 ),
 compared AS (
     SELECT  q.*,
             LAG(avg_runs) OVER w                                         AS prev_avg,
             ROW_NUMBER()  OVER w                                         AS q_first,
-            ROW_NUMBER()  OVER (PARTITION BY player_id
+            ROW_NUMBER()  OVER (PARTITION BY player_id, match_format
                                 ORDER BY year DESC, quarter DESC)        AS q_last,
-            COUNT(*)      OVER (PARTITION BY player_id)                  AS quarters
+            COUNT(*)      OVER (PARTITION BY player_id, match_format)    AS quarters
     FROM    quarterly q
-    WINDOW  w AS (PARTITION BY player_id ORDER BY year, quarter)
+    WINDOW  w AS (PARTITION BY player_id, match_format ORDER BY year, quarter)
 ),
 summary AS (
     SELECT  player_id,
+            match_format,
             MAX(quarters)                                                AS quarters,
             MIN(period)                                                  AS first_quarter,
             MAX(period)                                                  AS last_quarter,
@@ -47,11 +51,12 @@ summary AS (
             AVG(strike_rate) FILTER (WHERE q_first <= 3)                 AS early_sr,
             AVG(strike_rate) FILTER (WHERE q_last  <= 3)                 AS recent_sr
     FROM    compared
-    GROUP BY player_id
+    GROUP BY player_id, match_format
     HAVING  MAX(quarters) >= 6
 )
 SELECT  p.player_name,
         p.primary_team,
+        s.match_format              AS format,
         s.quarters,
         s.first_quarter,
         s.last_quarter,
@@ -67,4 +72,4 @@ SELECT  p.player_name,
              ELSE 'Career Stable' END                                    AS career_phase
 FROM    summary    s
 JOIN    dim_player p ON p.player_id = s.player_id
-ORDER BY s.recent_avg - s.early_avg DESC;
+ORDER BY format, s.recent_avg - s.early_avg DESC;

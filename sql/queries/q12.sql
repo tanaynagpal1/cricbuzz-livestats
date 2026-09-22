@@ -1,6 +1,6 @@
 -- id: 12
 -- title: Home vs away wins
--- question: For each team, count wins at home and away, where home means the venue's country matches the team's country.
+-- question: For each team and format, count wins at home and away, where home means the venue's country matches the team's country.
 -- params: none
 
 -- Step 1 turns each match into TWO rows, one per team, so every team can
@@ -8,13 +8,16 @@
 -- view: its own ground = Home, the opponent's ground = Away, anywhere
 -- else = Neutral. home_nation is used rather than country so that West
 -- Indies are at home in Jamaica, Barbados and Trinidad.
+-- Split by format: ODI and T20I numbers are never mixed in one row,
+-- because a good ODI average and a good T20I average are different things.
 WITH team_match AS (
-    SELECT match_id, team1_id AS team_id, team2_id AS opponent_id, venue_id, winner_id FROM fact_match
+    SELECT match_id, match_format, team1_id AS team_id, team2_id AS opponent_id, venue_id, winner_id FROM fact_match
     UNION ALL
-    SELECT match_id, team2_id,            team1_id,                venue_id, winner_id FROM fact_match
+    SELECT match_id, match_format, team2_id,            team1_id,                venue_id, winner_id FROM fact_match
 ),
 labelled AS (
     SELECT  t.team_display,
+            tm.match_format,
             CASE WHEN v.home_nation = t.team_name THEN 'Home'
                  WHEN v.home_nation = o.team_name THEN 'Away'
                  ELSE 'Neutral' END                     AS venue_type,
@@ -25,6 +28,7 @@ labelled AS (
     JOIN    dim_venue v ON v.venue_id = tm.venue_id
 )
 SELECT  team_display                                                AS team,
+        match_format                                                AS format,
         COUNT(*) FILTER (WHERE venue_type = 'Home')                 AS home_matches,
         COUNT(*) FILTER (WHERE venue_type = 'Home' AND won)         AS home_wins,
         COUNT(*) FILTER (WHERE venue_type = 'Away')                 AS away_matches,
@@ -32,5 +36,5 @@ SELECT  team_display                                                AS team,
         COUNT(*) FILTER (WHERE venue_type = 'Neutral')              AS neutral_matches,
         COUNT(*) FILTER (WHERE venue_type = 'Neutral' AND won)      AS neutral_wins
 FROM    labelled
-GROUP BY team_display
-ORDER BY COUNT(*) FILTER (WHERE won) DESC, team;
+GROUP BY team_display, match_format
+ORDER BY format, COUNT(*) FILTER (WHERE won) DESC, team;

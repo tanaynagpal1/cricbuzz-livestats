@@ -1,6 +1,6 @@
 -- id: 23
 -- title: Recent form
--- question: Using each player's last 10 innings: average of last 5 vs last 10, strike-rate trend, scores of 50+, consistency (std dev), and a form label.
+-- question: Using each player's last 10 innings in each format: average of last 5 vs last 10, strike-rate trend, scores of 50+, consistency (std dev), and a form label.
 -- params: none
 
 -- ROW_NUMBER numbers each player's innings newest-first (1 = latest).
@@ -11,15 +11,18 @@
 --   Good       30+
 --   Average    18+
 --   Poor       below 18
+-- Split by format: ODI and T20I numbers are never mixed in one row,
+-- because a good ODI average and a good T20I average are different things.
 WITH numbered AS (
-    SELECT  b.player_id, b.runs_scored, b.balls_faced, m.match_date,
-            ROW_NUMBER() OVER (PARTITION BY b.player_id
+    SELECT  b.player_id, m.match_format, b.runs_scored, b.balls_faced, m.match_date,
+            ROW_NUMBER() OVER (PARTITION BY b.player_id, m.match_format
                                ORDER BY m.match_date DESC, m.match_id DESC) AS rn
     FROM    fact_batting b
     JOIN    fact_match   m ON m.match_id = b.match_id
 ),
 last10 AS (
     SELECT  player_id,
+            match_format,
             MAX(match_date)                                                       AS last_innings,
             COUNT(*)                                                              AS innings,
             AVG(runs_scored) FILTER (WHERE rn <= 5)                               AS avg_last5,
@@ -31,10 +34,11 @@ last10 AS (
             STDDEV(runs_scored)                                                   AS std_dev
     FROM    numbered
     WHERE   rn <= 10
-    GROUP BY player_id
+    GROUP BY player_id, match_format
 )
 SELECT  p.player_name,
         p.primary_team,
+        l.match_format                          AS format,
         l.last_innings,
         ROUND(l.avg_last5, 1)                   AS avg_last5,
         ROUND(l.avg_last10, 1)                  AS avg_last10,
@@ -53,4 +57,4 @@ FROM    last10     l
 JOIN    dim_player p ON p.player_id = l.player_id
 WHERE   l.innings = 10
   AND   l.last_innings >= (SELECT MAX(match_date) FROM fact_match) - INTERVAL '1 year'
-ORDER BY l.avg_last5 DESC;
+ORDER BY format, l.avg_last5 DESC;

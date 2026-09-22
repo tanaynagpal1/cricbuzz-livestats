@@ -1,12 +1,14 @@
 -- id: 22
 -- title: Head-to-head records (last 3 years)
--- question: For team pairs with 5+ matches in the last 3 years: matches, wins each, average victory margin, wins batting first vs chasing, venues used, and win % for each team.
+-- question: For team pairs with 5+ matches in one format in the last 3 years: matches, wins each, average victory margin, wins batting first vs chasing, venues used, and win % for each team.
 -- params: none
 
 -- Each pair is stored once, lower team_id first (team_a), so India–Australia
 -- and Australia–India count as the same rivalry. "Last 3 years" counts back
 -- from the latest match in the archive. Margins are split into runs and
 -- wickets, because averaging "40 runs" with "6 wickets" means nothing.
+-- Split by format: ODI and T20I numbers are never mixed in one row,
+-- because a good ODI average and a good T20I average are different things.
 WITH recent AS (
     SELECT  m.*,
             LEAST(m.team1_id, m.team2_id)    AS team_a,
@@ -16,7 +18,8 @@ WITH recent AS (
     JOIN    fact_innings i ON i.match_id = m.match_id AND i.innings_no = 1
     WHERE   m.match_date >= (SELECT MAX(match_date) FROM fact_match) - INTERVAL '3 years'
 )
-SELECT  ta.team_display                                                         AS team_a,
+SELECT  r.match_format                                                          AS format,
+        ta.team_display                                                         AS team_a,
         tb.team_display                                                         AS team_b,
         COUNT(*)                                                                AS matches,
         COUNT(DISTINCT r.venue_id)                                              AS venues,
@@ -35,6 +38,6 @@ SELECT  ta.team_display                                                         
 FROM    recent   r
 JOIN    dim_team ta ON ta.team_id = r.team_a
 JOIN    dim_team tb ON tb.team_id = r.team_b
-GROUP BY ta.team_display, tb.team_display
+GROUP BY r.match_format, ta.team_display, tb.team_display
 HAVING  COUNT(*) >= 5
-ORDER BY matches DESC, team_a;
+ORDER BY format, matches DESC, team_a;
