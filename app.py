@@ -73,6 +73,9 @@ PAGES = {
     "Manage": [
         st.Page("pages/5_CRUD_Operations.py", title="Manage Data", icon=":material/edit_note:"),
     ],
+    "Ask AI": [
+        st.Page("pages/10_Ask_AI.py", title="Cricket Chat", icon=":material/smart_toy:"),
+    ],
 }
 
 # position="top" puts the menus in a bar across the top of the screen,

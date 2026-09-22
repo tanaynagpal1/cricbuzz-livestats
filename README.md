@@ -22,6 +22,7 @@ Built by **Tanay Nagpal** as the Labmentrix capstone project.
 | **Player Lab** | One player's whole career: per-format tiles, innings timeline, runs by year and opponent, how they get out |
 | **Rivalries** | Full-member win matrix and any head-to-head: results strip, running lead, home/away, star players |
 | **SQL Analytics** | The 25 analytics queries, each shown next to the SQL that produced it; search, download, run all |
+| **Ask AI** | Chat in plain English: answers come from the database via read-only SQL (shown with every answer), with general cricket knowledge clearly labelled; remembers the conversation for follow-ups |
 | **Manage Data** | Full CRUD on players (create, read, update, delete) with transactions and foreign-key protection |
 
 A sidebar filter set (men's/women's, ODI/T20I, years, team, opponent, host country, ground) applies across the analytics pages.
@@ -224,6 +225,7 @@ cricbuzz_livestats/
 | Language | Python 3.13 |
 | Web app | Streamlit 1.63 |
 | Charts | Plotly |
+| AI assistant | Google Gemini (google-genai), read-only text-to-SQL |
 | Data handling | pandas, NumPy |
 | Database | PostgreSQL on Neon (serverless) |
 | Database access | SQLAlchemy 2 + psycopg2 |
